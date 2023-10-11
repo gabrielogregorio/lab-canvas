@@ -7,7 +7,8 @@
     "1": "npx parcel ./base.html",
     "2": "npx parcel ./lines.html",
     "3": "npx parcel ./animateBase.html",
-    "4": "npx parcel ./circle.html"
+    "4": "npx parcel ./circle.html",
+    "arcTo":"npx parcel ./arcTo.html"
   },
   "devDependencies": {
     "@parcel/config-default": "^2.4.0",
