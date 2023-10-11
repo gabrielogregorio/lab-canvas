@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "three js studies",
   "main": "index.js",
+  
   "scripts": {
     "1": "npx parcel ./base.html",
     "2": "npx parcel ./lines.html",
