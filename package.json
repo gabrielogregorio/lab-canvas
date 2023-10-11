@@ -4,7 +4,8 @@
   "description": "three js studies",
   "main": "index.js",
   "scripts": {
-
+    "1": "npx parcel ./base.html",
+    "2": "npx parcel ./lines.html"
   },
   "devDependencies": {
     "@parcel/config-default": "^2.4.0",
