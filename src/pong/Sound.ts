@@ -1,8 +1,11 @@
+import audio from "./ping.wav";
+
 export class Sound {
   music: HTMLAudioElement;
 
   constructor() {
-    this.music = document.getElementById("audio") as HTMLAudioElement;
+    this.music = new Audio();
+    this.music.src = audio;
   }
 
   play() {

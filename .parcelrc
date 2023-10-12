@@ -3,7 +3,9 @@
     "@parcel/config-default"
   ],
   "transformers": {
-    "*.{ts,tsx}": ["@parcel/transformer-typescript-tsc"]
+    "*.{ts,tsx}": ["@parcel/transformer-typescript-tsc"],
+    "*.{wav,mp3}": ["@parcel/transformer-raw"],
+    "*.{jpg,png}": ["@parcel/transformer-image"]
   },
   "reporters": [
     "...",

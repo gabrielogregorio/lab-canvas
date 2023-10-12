@@ -4,6 +4,7 @@
     "experimentalDecorators": true,
     "jsxImportSource": "preact",
     "allowJs": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "typeRoots": ["./node_modules/@types", "./types"]
   }
 }
