@@ -1,34 +1,52 @@
+type spriteConfig = {
+  spriteStartRow: number;
+  spriteStartCol: number;
+  drawPosX: number;
+  drawPosY: number;
+
+  drawWidth: number;
+  drawHeight: number;
+};
+
+const createAntiTankSprite = (
+  antiTankSprite: HTMLImageElement,
+  canvasContext: CanvasRenderingContext2D,
+  { spriteStartCol, spriteStartRow, drawPosX, drawPosY, drawHeight, drawWidth }: spriteConfig
+) => {
+  const totalSpriteRows = 4;
+  const totalSpriteCols = 4;
+
+  const spriteWidth = antiTankSprite.width / totalSpriteRows;
+  const spriteHeight = antiTankSprite.height / totalSpriteCols;
+
+  canvasContext.drawImage(antiTankSprite, spriteStartRow * spriteWidth, spriteStartCol * spriteHeight, spriteWidth, spriteHeight, drawPosX, drawPosY, drawWidth, drawHeight);
+};
+
 (function () {
-  const canvas = document.getElementById("canvas") as HTMLCanvasElement;
-  const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+  const canvasElement = document.getElementById("canvas") as HTMLCanvasElement;
+  const canvasContext = canvasElement.getContext("2d") as CanvasRenderingContext2D;
 
-  let antiTankClass = new Image();
-  antiTankClass.src = "http://localhost:8080/sprites.jpg";
+  let antiTankSprite = new Image();
+  antiTankSprite.src = "http://localhost:8080/sprites.jpg";
 
-  antiTankClass.addEventListener("load", () => {
-    const spriteRow = 0;
-    const spriteCol = 0;
-    const numLines = 4;
-    const numCols = 4;
+  antiTankSprite.addEventListener("load", () => {
+    let spriteActive = 0;
+    setInterval(() => {
+      spriteActive += 1;
 
-    const widthOneSprite = antiTankClass.width / numLines;
-    const heightOneSprite = antiTankClass.height / numCols;
+      if (spriteActive >= 4) {
+        spriteActive = 0;
+      }
 
-    const widthDrawImage = 200;
-    const heightDrawImage = 200;
-    const positionXDrawImage = 0;
-    const positionTDrawImage = 0;
-
-    context.drawImage(
-      antiTankClass,
-      spriteRow * widthOneSprite,
-      spriteCol * heightOneSprite,
-      widthOneSprite,
-      heightOneSprite,
-      positionXDrawImage,
-      positionTDrawImage,
-      widthDrawImage,
-      heightDrawImage
-    );
+      canvasContext.clearRect(0, 0, 500, 500);
+      createAntiTankSprite(antiTankSprite, canvasContext, {
+        spriteStartRow: spriteActive,
+        spriteStartCol: 0,
+        drawPosX: 150,
+        drawPosY: 150,
+        drawWidth: 100,
+        drawHeight: 100,
+      });
+    }, 200);
   });
 })();
