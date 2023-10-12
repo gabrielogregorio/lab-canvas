@@ -37,15 +37,15 @@ export class Canvas {
       this.canvasContext.fillText("Pressione Espaço para continuar", this.width / 2, this.height / 2);
 
       this.canvasContext.closePath();
-    } else {
-      this.canvasContext.beginPath();
-
-      this.canvasContext.font = "40px Arial";
-      this.canvasContext.fillStyle = "rgba(255,0,60,0.88)";
-      this.canvasContext.textAlign = "center";
-      this.canvasContext.fillText(`${this.orquestrer.player1Points} ${this.orquestrer.player2Points}`, this.width / 2, 50);
-
-      this.canvasContext.closePath();
     }
+
+    this.canvasContext.beginPath();
+
+    this.canvasContext.font = "40px Arial";
+    this.canvasContext.fillStyle = "rgba(255,0,60,0.88)";
+    this.canvasContext.textAlign = "center";
+    this.canvasContext.fillText(`${this.orquestrer.player1Points}   ${this.orquestrer.player2Points}`, this.width / 2, 50);
+
+    this.canvasContext.closePath();
   }
 }

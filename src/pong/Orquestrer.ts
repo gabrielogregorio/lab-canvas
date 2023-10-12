@@ -16,11 +16,11 @@ export class Orquestrer {
   }
 
   start() {
-    this.isPlaying = true;
+    this.isPlaying = true; //true;
   }
 
   stop() {
-    this.isPlaying = false;
+    // this.isPlaying = false;
   }
 
   getPlacar() {

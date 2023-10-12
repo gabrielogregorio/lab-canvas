@@ -56,6 +56,11 @@ export class Ball {
       this.directionX = 1;
     }
 
+    if (this.positionX <= 0) {
+      this.orquestrer.player2Points += 1;
+      this.orquestrer.stop();
+    }
+
     const aiPassRightBall = this.positionX >= this.ai.drawPosX;
     const aiInsideTopBoundaryBall = this.positionY >= this.ai.drawPosY;
     const aiInsideBottonBoundaryBall = this.positionY <= this.ai.drawPosY + this.ai.drawHeight;
@@ -63,6 +68,11 @@ export class Ball {
     const aiColision = aiPassRightBall && aiInsideTopBoundaryBall && aiInsideBottonBoundaryBall;
     if (aiColision) {
       this.updateColorBall("#00F0FF");
+    }
+
+    if (this.positionX + this.width >= this.canvas.width) {
+      this.orquestrer.player1Points += 1;
+      this.orquestrer.stop();
     }
     if (this.positionX + this.width >= this.canvas.width || aiColision) {
       this.sound.play();
@@ -94,3 +104,5 @@ export class Ball {
     this.canvas.canvasContext.closePath();
   }
 }
+
+// THIS CODE IS VERY BAD
