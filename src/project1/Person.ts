@@ -1,3 +1,4 @@
+import { Canvas } from "./Canvas";
 import { keyboardStateType } from "./types";
 
 let timeInMsToUpdateSprite = 150;
@@ -20,7 +21,7 @@ const directionColWalkSprite = {
 
 export class Person {
   antiTankSprite: HTMLImageElement;
-  canvasContext: CanvasRenderingContext2D;
+  canvas: Canvas;
   keyboardState: keyboardStateType;
   speed: number;
   stoppedSprite: number;
@@ -32,9 +33,9 @@ export class Person {
   drawHeight: number;
   spriteStartCol: number;
 
-  constructor(canvasContext: CanvasRenderingContext2D, keyboardState: keyboardStateType) {
+  constructor(canvas: Canvas, keyboardState: keyboardStateType) {
     this.antiTankSprite = undefined;
-    this.canvasContext = canvasContext;
+    this.canvas = canvas;
     this.keyboardState = keyboardState;
     this.speed = 3;
     this.stoppedSprite = 0;
@@ -64,8 +65,33 @@ export class Person {
   }
 
   handleWalking() {
-    this.drawPosX += this.keyboardState.right ? this.speed : this.keyboardState.left ? this.speed * -1 : 0;
-    this.drawPosY += this.keyboardState.top ? this.speed * -1 : this.keyboardState.bottom ? this.speed : 0;
+    if (this.keyboardState.right) {
+      this.drawPosX += this.speed;
+    } else if (this.keyboardState.left) {
+      this.drawPosX += this.speed * -1;
+    }
+
+    if (this.keyboardState.top) {
+      this.drawPosY += this.speed * -1;
+    } else if (this.keyboardState.bottom) {
+      this.drawPosY += this.speed;
+    }
+
+    const exceedsLeftBoundary = this.drawPosX <= 0;
+    const exceedsRightBoundary = this.drawPosX + this.drawWidth >= this.canvas.width;
+    if (exceedsLeftBoundary) {
+      this.drawPosX = 0;
+    } else if (exceedsRightBoundary) {
+      this.drawPosX = this.canvas.width - this.drawWidth;
+    }
+
+    const exceedsTopBoundary = this.drawPosY <= 0;
+    const exceedsBottomBoundary = this.drawPosY + this.drawHeight >= this.canvas.height;
+    if (exceedsTopBoundary) {
+      this.drawPosY = 0;
+    } else if (exceedsBottomBoundary) {
+      this.drawPosY = this.canvas.height - this.drawHeight;
+    }
   }
 
   render() {
@@ -85,6 +111,6 @@ export class Person {
 
     this.handleWalking();
 
-    this.canvasContext.drawImage(this.antiTankSprite, startSprite, endSprite, spriteWidth, spriteHeight, this.drawPosX, this.drawPosY, this.drawWidth, this.drawHeight);
+    this.canvas.canvasContext.drawImage(this.antiTankSprite, startSprite, endSprite, spriteWidth, spriteHeight, this.drawPosX, this.drawPosY, this.drawWidth, this.drawHeight);
   }
 }
