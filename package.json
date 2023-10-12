@@ -10,7 +10,8 @@
     "4": "npx parcel ./src/base/circle.html",
     "api": "node api.js",
     "arcTo": "npx parcel ./src/base/arcTo.html",
-    "images": "npx parcel ./src/project1/images.html"
+    "images": "npx parcel ./src/project1/images.html",
+    "pong": "npx parcel ./src/pong/images.html"
   },
   "devDependencies": {
     "@parcel/config-default": "^2.4.0",
