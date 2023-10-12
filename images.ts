@@ -30,6 +30,42 @@ const createAntiTankSprite = (
   antiTankSprite.src = "http://localhost:8080/sprites.jpg";
 
   antiTankSprite.addEventListener("load", () => {
+    let speed = 3;
+    let mapPlayer = {
+      top: false,
+      left: false,
+      bottom: false,
+      right: false,
+    };
+
+    let drawPosX = 150;
+    let drawPosY = 150;
+
+    let timeInMsToUpdateSprite = 150;
+
+    const moves = {
+      w(newValue) {
+        mapPlayer.top = newValue;
+      },
+      s(newValue) {
+        mapPlayer.bottom = newValue;
+      },
+      a(newValue) {
+        mapPlayer.left = newValue;
+      },
+      d(newValue) {
+        mapPlayer.right = newValue;
+      },
+    };
+
+    window.addEventListener("keydown", (event) => {
+      moves[event.key]?.(true);
+    });
+
+    window.addEventListener("keyup", (event) => {
+      moves[event.key]?.(false);
+    });
+
     let spriteActive = 0;
     setInterval(() => {
       spriteActive += 1;
@@ -37,16 +73,26 @@ const createAntiTankSprite = (
       if (spriteActive >= 4) {
         spriteActive = 0;
       }
+    }, timeInMsToUpdateSprite);
+
+    function draw() {
+      drawPosX += mapPlayer.right ? speed : mapPlayer.left ? speed * -1 : 0;
+      drawPosY += mapPlayer.top ? speed * -1 : mapPlayer.bottom ? speed : 0;
 
       canvasContext.clearRect(0, 0, 500, 500);
+
       createAntiTankSprite(antiTankSprite, canvasContext, {
         spriteStartRow: spriteActive,
         spriteStartCol: 0,
-        drawPosX: 150,
-        drawPosY: 150,
+        drawPosX,
+        drawPosY,
         drawWidth: 100,
         drawHeight: 100,
       });
-    }, 200);
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
   });
 })();
