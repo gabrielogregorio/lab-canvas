@@ -3,7 +3,6 @@ type spriteConfig = {
   spriteStartCol: number;
   drawPosX: number;
   drawPosY: number;
-
   drawWidth: number;
   drawHeight: number;
 };
@@ -43,18 +42,31 @@ const createAntiTankSprite = (
 
     let timeInMsToUpdateSprite = 150;
 
+    const directionColWalkSprite = {
+      Bottom: 0,
+      Left: 1,
+      Right: 2,
+      Top: 3,
+    };
+
+    let spriteStartCol = directionColWalkSprite.Top;
+
     const moves = {
       w(newValue) {
         mapPlayer.top = newValue;
+        if (newValue) spriteStartCol = directionColWalkSprite.Top;
       },
       s(newValue) {
         mapPlayer.bottom = newValue;
+        if (newValue) spriteStartCol = directionColWalkSprite.Bottom;
       },
       a(newValue) {
         mapPlayer.left = newValue;
+        if (newValue) spriteStartCol = directionColWalkSprite.Left;
       },
       d(newValue) {
         mapPlayer.right = newValue;
+        if (newValue) spriteStartCol = directionColWalkSprite.Right;
       },
     };
 
@@ -75,7 +87,12 @@ const createAntiTankSprite = (
       }
     }, timeInMsToUpdateSprite);
 
+    const stoppedSprite = 0;
+
     function draw() {
+      const playerIsStopped = !mapPlayer.bottom && !mapPlayer.left && !mapPlayer.right && !mapPlayer.top;
+
+      spriteActive = playerIsStopped ? stoppedSprite : spriteActive;
       drawPosX += mapPlayer.right ? speed : mapPlayer.left ? speed * -1 : 0;
       drawPosY += mapPlayer.top ? speed * -1 : mapPlayer.bottom ? speed : 0;
 
@@ -83,7 +100,7 @@ const createAntiTankSprite = (
 
       createAntiTankSprite(antiTankSprite, canvasContext, {
         spriteStartRow: spriteActive,
-        spriteStartCol: 0,
+        spriteStartCol,
         drawPosX,
         drawPosY,
         drawWidth: 100,
