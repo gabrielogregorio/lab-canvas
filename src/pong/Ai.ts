@@ -39,7 +39,7 @@ export class Ai {
     this.ball = ball;
   }
 
-  handleWalking() {
+  handleCollisionBoundaries() {
     if (this.keyboardState.right) {
       this.drawPosX += this.speed;
     } else if (this.keyboardState.left) {
@@ -53,41 +53,50 @@ export class Ai {
     }
 
     const exceedsLeftBoundary = this.drawPosX <= this.canvas.width - this.canvas.width / 3;
-    const exceedsRightBoundary = this.drawPosX >= this.canvas.width;
     if (exceedsLeftBoundary) {
       this.drawPosX = this.canvas.width - this.canvas.width / 3;
-    } else if (exceedsRightBoundary) {
+    }
+
+    const exceedsRightBoundary = this.drawPosX >= this.canvas.width;
+    if (exceedsRightBoundary) {
       this.drawPosX = this.canvas.width - this.drawWidth;
     }
     const exceedsTopBoundary = this.drawPosY <= 0;
-    const exceedsBottomBoundary = this.drawPosY + this.drawHeight >= this.canvas.height;
     if (exceedsTopBoundary) {
       this.drawPosY = 0;
-    } else if (exceedsBottomBoundary) {
+    }
+
+    const exceedsBottomBoundary = this.drawPosY + this.drawHeight >= this.canvas.height;
+
+    if (exceedsBottomBoundary) {
       this.drawPosY = this.canvas.height - this.drawHeight;
+    }
+  }
+
+  handleMovementAi() {
+    const startAiMovements = this.ball.positionX >= this.canvas.width / 2;
+    const centerPosition = this.drawPosY + this.drawHeight / 3;
+    if (this.ball.positionY < centerPosition && startAiMovements) {
+      this.keyboardState.top = true;
+      this.keyboardState.bottom = false;
+    } else if (this.ball.positionY > centerPosition && startAiMovements) {
+      this.keyboardState.bottom = true;
+      this.keyboardState.top = false;
+    }
+
+    if (this.ball.positionX > this.drawPosX && startAiMovements) {
+      this.keyboardState.left = false;
+      this.keyboardState.right = true;
+    } else if (this.ball.positionX < this.drawPosX && startAiMovements) {
+      this.keyboardState.left = true;
+      this.keyboardState.right = false;
     }
   }
 
   render() {
     if (this.orquestrer.isPlaying) {
-      this.handleWalking();
-      const startAiMovements = this.ball.positionX >= this.canvas.width / 2;
-      const centerPosition = this.drawPosY + this.drawHeight / 3;
-      if (this.ball.positionY < centerPosition && startAiMovements) {
-        this.keyboardState.top = true;
-        this.keyboardState.bottom = false;
-      } else if (this.ball.positionY > centerPosition && startAiMovements) {
-        this.keyboardState.bottom = true;
-        this.keyboardState.top = false;
-      }
-
-      if (this.ball.positionX > this.drawPosX && startAiMovements) {
-        this.keyboardState.left = false;
-        this.keyboardState.right = true;
-      } else if (this.ball.positionX < this.drawPosX && startAiMovements) {
-        this.keyboardState.left = true;
-        this.keyboardState.right = false;
-      }
+      this.handleCollisionBoundaries();
+      this.handleMovementAi();
     }
 
     this.canvas.canvasContext.beginPath();

@@ -4,6 +4,10 @@ import { Orquestrer } from "./Orquestrer";
 import { Pad } from "./Pad";
 import { Sound } from "./Sound";
 
+const getRandomDirection = () => {
+  return Math.random() > 0.5 ? 1 : -1;
+};
+
 export class Ball {
   canvas: Canvas;
   positionX: number;
@@ -11,26 +15,25 @@ export class Ball {
   speed: number;
   width: number;
   height: number;
-
   directionX: number;
   directionY: number;
-
   pad: Pad;
   ai: Ai;
   sound: Sound;
   private colorBall: string;
-
   orquestrer: Orquestrer;
+
   constructor(canvas: Canvas, pad: Pad, ai: Ai, sound: Sound, orquestrer: Orquestrer) {
     this.canvas = canvas;
     this.sound = sound;
     this.pad = pad;
     this.ai = ai;
+
     this.positionX = 450;
     this.positionY = 300;
     this.speed = 5;
-    this.directionX = Math.random() * 10 > 5 ? 1 : -1;
-    this.directionY = Math.random() * 10 > 5 ? 1 : -1;
+    this.directionX = getRandomDirection();
+    this.directionY = getRandomDirection();
 
     this.width = 10;
     this.height = 10;
@@ -38,20 +41,17 @@ export class Ball {
     this.colorBall = "#FAFAFA";
     this.orquestrer = orquestrer;
   }
+
   updateColorBall(newHexValue: string) {
     this.colorBall = newHexValue;
   }
 
   handleMovement() {
-    const playerPassRightBall = this.pad.drawPosX + this.pad.drawWidth >= this.positionX;
+    const playerPassRightBall = this.pad.drawPosX + this.pad.drawWidth >= this.positionX && this.positionX <= this.pad.drawPosX;
     const playerInsideTopBoundaryBall = this.positionY >= this.pad.drawPosY;
-    const playerInsideBottonBoundaryBall = this.positionY <= this.pad.drawPosY + this.pad.drawHeight;
-
-    const playerColision = playerPassRightBall && playerInsideTopBoundaryBall && playerInsideBottonBoundaryBall;
-    if (playerColision) {
-      this.updateColorBall("#FCEE09");
-    }
-    if (this.positionX <= 0 || playerColision) {
+    const playerInsideBottomBoundaryBall = this.positionY <= this.pad.drawPosY + this.pad.drawHeight;
+    const playerCollision = playerPassRightBall && playerInsideTopBoundaryBall && playerInsideBottomBoundaryBall;
+    if (this.positionX <= 0 || playerCollision) {
       this.sound.play();
       this.directionX = 1;
     }
@@ -61,20 +61,17 @@ export class Ball {
       this.orquestrer.stop();
     }
 
-    const aiPassRightBall = this.positionX >= this.ai.drawPosX;
+    const aiPassRightBall = this.positionX + this.width >= this.ai.drawPosX && this.positionX + this.width <= this.ai.drawPosX + this.ai.drawWidth;
     const aiInsideTopBoundaryBall = this.positionY >= this.ai.drawPosY;
-    const aiInsideBottonBoundaryBall = this.positionY <= this.ai.drawPosY + this.ai.drawHeight;
-
-    const aiColision = aiPassRightBall && aiInsideTopBoundaryBall && aiInsideBottonBoundaryBall;
-    if (aiColision) {
-      this.updateColorBall("#00F0FF");
-    }
+    const aiInsideBottomBoundaryBall = this.positionY <= this.ai.drawPosY + this.ai.drawHeight;
 
     if (this.positionX + this.width >= this.canvas.width) {
       this.orquestrer.player1Points += 1;
       this.orquestrer.stop();
     }
-    if (this.positionX + this.width >= this.canvas.width || aiColision) {
+
+    const aiCollision = aiPassRightBall && aiInsideTopBoundaryBall && aiInsideBottomBoundaryBall;
+    if (this.positionX + this.width >= this.canvas.width || aiCollision) {
       this.sound.play();
       this.directionX = -1;
     }
@@ -104,5 +101,3 @@ export class Ball {
     this.canvas.canvasContext.closePath();
   }
 }
-
-// THIS CODE IS VERY BAD
