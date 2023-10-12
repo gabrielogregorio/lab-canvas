@@ -1,17 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",
-    
-    "outDir": "dist",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-
-    "skipLibCheck": true,
-    "types": ["node"]
+    "module": "esnext",
+    "experimentalDecorators": true,
+    "jsxImportSource": "preact",
+    "allowJs": true,
+    "isolatedModules": true
   }
 }
