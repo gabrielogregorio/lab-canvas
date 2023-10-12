@@ -9,3 +9,4 @@ Estudos baseados na playlist [CFBCursos](https://www.youtube.com/watch?v=LQpxDIB
 1. Instale os pacotes com o yarn
 2. Execute qual script você quer de acordo com os scripts no package.json
 3. Então é só acessar http://localhost:1234/
+4. Rode o servidor estático, ``yarn api`
