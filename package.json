@@ -4,13 +4,13 @@
   "description": "three js studies",
   "main": "index.js",
   "scripts": {
-    "1": "npx parcel ./base.html",
-    "2": "npx parcel ./lines.html",
-    "3": "npx parcel ./animateBase.html",
-    "4": "npx parcel ./circle.html",
+    "1": "npx parcel ./src/base/base.html",
+    "2": "npx parcel ./src/base/lines.html",
+    "3": "npx parcel ./src/base/animateBase.html",
+    "4": "npx parcel ./src/base/circle.html",
     "api": "node api.js",
-    "arcTo": "npx parcel ./arcTo.html",
-    "images": "npx parcel ./images.html"
+    "arcTo": "npx parcel ./src/base/arcTo.html",
+    "images": "npx parcel ./src/project1/images.html"
   },
   "devDependencies": {
     "@parcel/config-default": "^2.4.0",
