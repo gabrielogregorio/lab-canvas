@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      html {
+        background-color: #050a0e;
+      }
+
+      #canvas {
+        border: 2px solid rgba(255, 0, 60, 0.88);
+        border-radius: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <audio src="http://localhost:8080/ping.wav" type="audio/wav" id="audio"></audio>
+
+    <canvas id="canvas" width="900" height="600">
+      <p>Seu navegador não tem suporte ao canvas</p>
+    </canvas>
+
+    <!-- #FAFAFA -->
+    <script src="./pong/index.ts" type="module"></script>
+  </body>
+</html>

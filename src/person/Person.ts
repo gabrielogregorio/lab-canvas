@@ -1,5 +1,6 @@
 import { Canvas } from "./Canvas";
 import { keyboardStateType } from "./types";
+import person from "./sprites.jpg";
 
 let timeInMsToUpdateSprite = 150;
 let spriteActive = 0;
@@ -51,7 +52,7 @@ export class Person {
   async loadFiles() {
     return new Promise((resolve, reject) => {
       let antiTankSprite = new Image();
-      antiTankSprite.src = "http://localhost:8080/sprites.jpg";
+      antiTankSprite.src = person;
 
       antiTankSprite.onload = () => {
         this.antiTankSprite = antiTankSprite;

@@ -8,7 +8,7 @@ import { Sound } from "./Sound";
 
 (async function () {
   const keyboard = new KeyBoardHandler();
-  
+
   const orquestrer = new Orquestrer();
   const canvas = new Canvas(orquestrer);
   const person = new Pad(canvas, keyboard.keyboardState, orquestrer);
