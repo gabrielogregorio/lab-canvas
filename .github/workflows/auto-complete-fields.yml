@@ -1,0 +1,113 @@
+name: auto complete fields and validate pr
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      # - edited
+
+jobs:
+  assign_and_label:
+    timeout-minutes: 2
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+
+      - name: get pr commits
+        id: pr_commits
+        run: |
+          pr_commits=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "${{ github.event.pull_request.commits_url }}")
+          echo "::set-output name=pr_commits::$pr_commits"
+
+      - name: get current version
+        id: get-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $VERSION"
+          echo "TAG_VERSION=v$VERSION" >> $GITHUB_ENV
+
+      - name: assign user and add labels
+        uses: actions/github-script@v5
+        with:
+          script: |
+            console.log('start scripting...')
+            const commitsResponse = await github.rest.pulls.listCommits({ owner: context.repo.owner, repo: context.repo.repo, pull_number: context.issue.number });
+            const commitMessages = commitsResponse.data.map(commit => commit.commit.message.toLowerCase());
+
+            const { owner, repo, number } = context.issue;
+            const prAuthor = context.payload.pull_request.user.login;
+
+            await github.rest.issues.addAssignees({ owner, repo, issue_number: number, assignees: [prAuthor] });
+
+            // add labels in pr
+            const labelsToAdd = [];
+
+            for (const message of commitMessages) {
+              if (message.includes("fix")) { labelsToAdd.push("bug"); }
+              if (message.includes("feat")) { labelsToAdd.push("feature"); }
+              if (message.includes("docs")) { labelsToAdd.push("documentation"); }
+              if (message.includes("refactor")) { labelsToAdd.push("refactor"); }
+              if (message.includes("chore")) { labelsToAdd.push("help wanted"); }
+            }
+
+            if (labelsToAdd.length > 0) {
+              await github.rest.issues.addLabels({ owner, repo, issue_number: number, labels: labelsToAdd });
+            }
+
+
+            // added commits on pull request
+            let prBody = (await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            })).data.body;
+
+            const verifyIfNeedAddsResolve = (updatedBodyLocal) => {
+              if(!updatedBodyLocal.includes('[...autoGenerate]')) {
+                return updatedBodyLocal
+              }
+
+              let commitMessagesAreString = ''
+              for (const message of commitMessages) {
+                if (!updatedBodyLocal.includes(message)) {
+                  commitMessagesAreString += `- ${message}\n`;
+                }
+              }
+
+              const noMessageAdded = commitMessagesAreString === ''
+              if(noMessageAdded) {
+                return updatedBodyLocal
+              }
+
+              commitMessagesAreString = commitMessagesAreString + '[...autoGenerate]'
+              return updatedBodyLocal.replace('[...autoGenerate]', commitMessagesAreString)
+            }
+
+            const newPrBody = verifyIfNeedAddsResolve(prBody)
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: newPrBody
+            });
+
+            // update pr title
+            const currentPackageVersion = process.env.TAG_VERSION;
+            const currentTitle = context.payload.pull_request.title;
+
+            let newTitle = `Release ${currentPackageVersion} - ${currentTitle}`
+
+            if(currentTitle.includes('Release v')) {
+              newTitle = currentTitle.replace(/Release v[\d*\\.]{1,}/, `Release ${currentPackageVersion}`)
+            }
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              title: newTitle
+            });
