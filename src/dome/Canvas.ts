@@ -11,10 +11,14 @@ export class Canvas {
     this.height = 800;
   }
 
-  render() {
+  renderCity() {
     this.contextCanvas.beginPath();
     this.contextCanvas.fillStyle = "#22ffff";
     this.contextCanvas.fillRect(this.width - this.width / 3.5, this.height - 3, 300, 3);
     this.contextCanvas.closePath();
+  }
+
+  render() {
+    this.renderCity();
   }
 }

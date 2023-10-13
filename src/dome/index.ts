@@ -1,50 +1,37 @@
 import { Canvas } from "./Canvas";
+import { RadarSystem } from "./RadarSystem";
 import { KeyBoardHandler } from "./KeyBoardHandler";
-import { Rocket } from "./Rocket";
+import { HostileArtifact } from "./HostileArtifact";
+import { randomizeWindSpeed } from "./utils";
+import { buildHostileArtifact } from "./buildHostileArtifact";
 
-function randomRGB() {
-  const r = Math.floor(Math.random() * 256);
-  const g = Math.floor(Math.random() * 256);
-  const b = Math.floor(Math.random() * 256);
-
-  return `rgb(${r}, ${g}, ${b})`;
-}
+let windSpeed = 0;
 
 (function () {
   const canvas = new Canvas();
   const keyboard = new KeyBoardHandler();
-  let windSpeed = 0;
 
-  const misslebles: Rocket[] = [];
+  const hostileArtifacts: HostileArtifact[] = [];
+  const radarSystem = new RadarSystem(hostileArtifacts, canvas);
 
-  function drawMissile() {
+  function bootstrap() {
     canvas.contextCanvas.clearRect(0, 0, canvas.width, canvas.height);
-    canvas.render();
-    windSpeed += Math.random() * 10;
-    if (windSpeed > 50) {
-      windSpeed = 50;
-    }
 
-    if (windSpeed < -50) {
-      windSpeed = -50;
-    }
+    canvas.render();
+    radarSystem.render();
+
+    windSpeed = randomizeWindSpeed(windSpeed);
 
     if (keyboard.keyboardState.space) {
-      const misseble = new Rocket(canvas, {
-        color: randomRGB(),
-        horizontalSpeedInitial: 200 + (Math.random() - 0.5) * 100,
-        verticalSpeedInitial: 500 + (Math.random() - 0.5) * 100,
-      });
-      misseble.launch();
-      misslebles.push(misseble);
+      hostileArtifacts.push(buildHostileArtifact(canvas));
     }
 
-    misslebles.forEach((missible) => {
-      missible.render(windSpeed);
+    hostileArtifacts.forEach((hostileArtifact) => {
+      hostileArtifact.render(windSpeed);
     });
 
-    requestAnimationFrame(drawMissile);
+    requestAnimationFrame(bootstrap);
   }
 
-  requestAnimationFrame(drawMissile);
+  requestAnimationFrame(bootstrap);
 })();

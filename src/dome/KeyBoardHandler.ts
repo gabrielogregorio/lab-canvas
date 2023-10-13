@@ -2,6 +2,7 @@ import { keyboardStateType } from "./types";
 
 export class KeyBoardHandler {
   keyboardState: keyboardStateType;
+
   constructor() {
     this.keyboardState = {
       space: false,
