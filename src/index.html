@@ -4,10 +4,130 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      html {
+        background-color: #222222;
+      }
+
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+
+      body {
+        margin: auto;
+        max-width: 800px;
+      }
+    </style>
   </head>
   <body>
-    <div class="">PROJETOS</div>
+    <style>
+      h1 {
+        text-align: center;
+        font-weight: bold;
+        margin-top: 5rem;
+        margin-bottom: 2rem;
+        font-size: 3rem;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: tomato;
+      }
 
-    <a href="/"></a>
+      h2 {
+        text-align: left;
+        color: tomato;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        margin: 0 2%;
+        margin-top: 4rem;
+        font-weight: bold;
+        font-size: 2rem;
+      }
+
+      ul {
+        margin: 0 2%;
+        display: grid;
+        margin-top: 1rem;
+        grid-template-columns: 4fr 4fr;
+        gap: 1rem;
+        list-style: none;
+      }
+
+      li {
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        background-color: red;
+      }
+
+      li a {
+        color: white;
+        text-decoration: none;
+        background-color: #444444;
+        text-align: center;
+        padding: 1rem;
+        font-size: 1.5rem;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: 0%;
+
+        transition-property: all;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 150ms;
+      }
+
+      li a:hover {
+        scale: 1.05;
+        background-color: tomato;
+      }
+
+      .bottom {
+        height: 10rem;
+      }
+    </style>
+
+    <h1>LAB CANVAS</h1>
+
+    <h2>PROJETOS</h2>
+
+    <ul>
+      <li>
+        <a href="./dome.html">dome</a>
+      </li>
+
+      <li>
+        <a href="./person.html">person</a>
+      </li>
+
+      <li>
+        <a href="./pong.html">pong</a>
+      </li>
+    </ul>
+
+    <h2>Estudos</h2>
+
+    <ul>
+      <li>
+        <a href="./animateBase.html">animateBase</a>
+      </li>
+
+      <li>
+        <a href="./arcTo.html">arcTo</a>
+      </li>
+
+      <li>
+        <a href="./base.html">base</a>
+      </li>
+
+      <li>
+        <a href="./circle.html">circle</a>
+      </li>
+
+      <li>
+        <a href="./lines.html">lines</a>
+      </li>
+    </ul>
+
+    <div class="bottom"></div>
   </body>
 </html>
