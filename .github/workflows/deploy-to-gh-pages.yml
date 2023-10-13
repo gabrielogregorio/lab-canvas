@@ -1,9 +1,8 @@
 name: deploy
 
 on:
-  pull_request:
-    branch:
-      - main
+  push:
+    branches: [main]
 
 jobs:
   preview:
