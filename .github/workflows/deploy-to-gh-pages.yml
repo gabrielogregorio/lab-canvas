@@ -1,0 +1,41 @@
+name: deploy
+
+on:
+  pull_request:
+    branch:
+      - main
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: checkout Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: install dependencies
+        run: yarn
+
+      - name: build App
+        run: |
+          yarn build
+
+      - name: deploy with gh-pages
+        run: |
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/gabrielogregorio/lab-canvas.git
+
+          echo "deploy do gh pages"
+          npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
