@@ -19,17 +19,22 @@ function randomRGB() {
 
   function drawMissile() {
     canvas.contextCanvas.clearRect(0, 0, canvas.width, canvas.height);
-    windSpeed += Math.random() * 2;
-    if (windSpeed > 20) {
-      windSpeed = 20;
+    canvas.render();
+    windSpeed += Math.random() * 10;
+    if (windSpeed > 50) {
+      windSpeed = 50;
     }
 
-    if (windSpeed < -20) {
-      windSpeed = -20;
+    if (windSpeed < -50) {
+      windSpeed = -50;
     }
 
     if (keyboard.keyboardState.space) {
-      const misseble = new Rocket(canvas, { color: randomRGB(), horizontalSpeedInitial: 100 + (Math.random() - 0.5) * 20, verticalSpeedInitial: 500 + (Math.random() - 0.5) * 20 });
+      const misseble = new Rocket(canvas, {
+        color: randomRGB(),
+        horizontalSpeedInitial: 200 + (Math.random() - 0.5) * 100,
+        verticalSpeedInitial: 500 + (Math.random() - 0.5) * 100,
+      });
       misseble.launch();
       misslebles.push(misseble);
     }

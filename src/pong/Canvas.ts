@@ -23,7 +23,7 @@ export class Canvas {
   render() {
     this.canvasContext.beginPath();
 
-    this.canvasContext.fillStyle = "rgba(255,0,60,0.88)";
+    this.canvasContext.fillStyle = "#ffd4e3";
     this.canvasContext.fillRect(this.width / 2 - 1, 0, 2, this.height);
 
     this.canvasContext.closePath();
@@ -32,9 +32,11 @@ export class Canvas {
       this.canvasContext.beginPath();
 
       this.canvasContext.font = "30px Arial";
-      this.canvasContext.fillStyle = "rgba(255,0,60,0.88)";
+      this.canvasContext.fillStyle = "#ffd4e3";
       this.canvasContext.textAlign = "center";
       this.canvasContext.fillText("Pressione Espaço para continuar", this.width / 2, this.height / 2);
+
+      this.canvasContext.fillText("shift para ganhar velocidade", this.width / 2, this.height / 2 + 40);
 
       this.canvasContext.closePath();
     }
@@ -42,7 +44,7 @@ export class Canvas {
     this.canvasContext.beginPath();
 
     this.canvasContext.font = "40px Arial";
-    this.canvasContext.fillStyle = "rgba(255,0,60,0.88)";
+    this.canvasContext.fillStyle = "#ffd4e3";
     this.canvasContext.textAlign = "center";
     this.canvasContext.fillText(`${this.orquestrer.player1Points}   ${this.orquestrer.player2Points}`, this.width / 2, 50);
 

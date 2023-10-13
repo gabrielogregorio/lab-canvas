@@ -1,7 +1,7 @@
 import { Canvas } from "./Canvas";
 
 const GRAVITY = 9.81;
-const factorShowInsideCanvas = 5;
+const factorShowInsideCanvas = 20;
 
 function rocketTrajectory(t, horizontalSpeedInitial, verticalSpeedInitial, windSpeed) {
   let horizontalSpeedCorrected = horizontalSpeedInitial + windSpeed;
@@ -70,7 +70,7 @@ export class Rocket {
 
       this.canvas.contextCanvas.beginPath();
       this.canvas.contextCanvas.fillStyle = this.color;
-      this.canvas.contextCanvas.fillRect(position.x, this.canvas.height - position.y, 10, 10);
+      this.canvas.contextCanvas.fillRect(position.x, this.canvas.height - position.y, 4, 4);
       this.canvas.contextCanvas.closePath();
       return;
     }
@@ -79,7 +79,7 @@ export class Rocket {
     if (rocketAsLaunched) {
       this.canvas.contextCanvas.beginPath();
       this.canvas.contextCanvas.fillStyle = "#ff7722";
-      this.canvas.contextCanvas.fillRect(position.x, this.canvas.height - 10, 50, 50);
+      this.canvas.contextCanvas.fillRect(position.x, this.canvas.height - 10, 10, 10);
       this.canvas.contextCanvas.closePath();
     }
   }

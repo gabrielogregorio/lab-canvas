@@ -1,7 +1,14 @@
 export type keyboardStateType = {
-  top: boolean;
-  left: boolean;
-  bottom: boolean;
-  right: boolean;
-  space: boolean;
+  KeyW: boolean;
+  KeyA: boolean;
+  KeyS: boolean;
+  KeyD: boolean;
+  Space: boolean;
+  ShiftLeft: boolean;
+
+  Numpad0: boolean;
+  ArrowUp: boolean;
+  ArrowLeft: boolean;
+  ArrowRight: boolean;
+  ArrowDown: boolean;
 };

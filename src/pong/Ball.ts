@@ -1,4 +1,3 @@
-import { Ai } from "./Ai";
 import { Canvas } from "./Canvas";
 import { Orquestrer } from "./Orquestrer";
 import { Pad } from "./Pad";
@@ -18,20 +17,20 @@ export class Ball {
   directionX: number;
   directionY: number;
   pad: Pad;
-  ai: Ai;
+  player2: Pad;
   sound: Sound;
   private colorBall: string;
   orquestrer: Orquestrer;
 
-  constructor(canvas: Canvas, pad: Pad, ai: Ai, sound: Sound, orquestrer: Orquestrer) {
+  constructor(canvas: Canvas, pad: Pad, player2: Pad, sound: Sound, orquestrer: Orquestrer) {
     this.canvas = canvas;
     this.sound = sound;
     this.pad = pad;
-    this.ai = ai;
+    this.player2 = player2;
 
     this.positionX = 450;
     this.positionY = 300;
-    this.speed = 5;
+    this.speed = 9;
     this.directionX = getRandomDirection();
     this.directionY = getRandomDirection();
 
@@ -61,9 +60,9 @@ export class Ball {
       this.orquestrer.stop();
     }
 
-    const aiPassRightBall = this.positionX + this.width >= this.ai.drawPosX && this.positionX + this.width <= this.ai.drawPosX + this.ai.drawWidth;
-    const aiInsideTopBoundaryBall = this.positionY >= this.ai.drawPosY;
-    const aiInsideBottomBoundaryBall = this.positionY <= this.ai.drawPosY + this.ai.drawHeight;
+    const aiPassRightBall = this.positionX + this.width >= this.player2.drawPosX && this.positionX + this.width <= this.player2.drawPosX + this.player2.drawWidth;
+    const aiInsideTopBoundaryBall = this.positionY >= this.player2.drawPosY;
+    const aiInsideBottomBoundaryBall = this.positionY <= this.player2.drawPosY + this.player2.drawHeight;
 
     if (this.positionX + this.width >= this.canvas.width) {
       this.orquestrer.player1Points += 1;

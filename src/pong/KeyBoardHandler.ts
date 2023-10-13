@@ -4,32 +4,59 @@ export class KeyBoardHandler {
   keyboardState: keyboardStateType;
   constructor() {
     this.keyboardState = {
-      top: false,
-      left: false,
-      bottom: false,
-      right: false,
-      space: false,
+      KeyW: false,
+      KeyA: false,
+      KeyS: false,
+      KeyD: false,
+      Space: false,
+      ShiftLeft: false,
+      Numpad0: false,
+      ArrowUp: false,
+      ArrowLeft: false,
+      ArrowRight: false,
+      ArrowDown: false,
     };
 
     const moves = {
       KeyW: (newValue) => {
-        this.keyboardState.top = newValue;
+        this.keyboardState.KeyW = newValue;
       },
       KeyS: (newValue) => {
-        this.keyboardState.bottom = newValue;
+        this.keyboardState.KeyS = newValue;
       },
       KeyA: (newValue) => {
-        this.keyboardState.left = newValue;
+        this.keyboardState.KeyA = newValue;
       },
       KeyD: (newValue) => {
-        this.keyboardState.right = newValue;
+        this.keyboardState.KeyD = newValue;
       },
+      ShiftLeft: (newValue) => {
+        this.keyboardState.ShiftLeft = newValue;
+      },
+
       Space: (newValue) => {
-        this.keyboardState.space = newValue;
+        this.keyboardState.Space = newValue;
+      },
+
+      Numpad0: (newValue) => {
+        this.keyboardState.Numpad0 = newValue;
+      },
+      ArrowUp: (newValue) => {
+        this.keyboardState.ArrowUp = newValue;
+      },
+      ArrowLeft: (newValue) => {
+        this.keyboardState.ArrowLeft = newValue;
+      },
+      ArrowRight: (newValue) => {
+        this.keyboardState.ArrowRight = newValue;
+      },
+      ArrowDown: (newValue) => {
+        this.keyboardState.ArrowDown = newValue;
       },
     };
 
     window.addEventListener("keydown", (event) => {
+      console.log(event.code);
       moves[event.code]?.(true);
     });
 
