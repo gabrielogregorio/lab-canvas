@@ -4,7 +4,7 @@
   "description": "three js studies",
   "scripts": {
     "dev": "npx parcel ./src/*.html",
-    "build": "npx parcel build ./src/**/*.html"
+    "build": "npx parcel build ./src/**/*.html --public-url /lab-canvas/"
   },
   "devDependencies": {
     "@parcel/config-default": "^2.4.0",
