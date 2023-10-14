@@ -44,8 +44,8 @@ export class Canvas {
     this.canvasContext.beginPath();
 
     this.canvasContext.font = "40px Arial";
-    this.canvasContext.fillStyle = "#ffd4e3";
     this.canvasContext.textAlign = "center";
+    this.canvasContext.fillStyle = "#ffd4e3";
     this.canvasContext.fillText(`${this.orquestrer.player1Points}   ${this.orquestrer.player2Points}`, this.width / 2, 50);
 
     this.canvasContext.closePath();

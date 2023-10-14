@@ -7,7 +7,6 @@ const TIME_IN_MS_TO_FINISH_ANIMATE_EXPLOSION = 2000;
 
 export class DefenseMissiles {
   missionIsDone: boolean;
-  isGoing: boolean;
   canvas: Canvas;
   target: HostileArtifact;
   explosionFinished: boolean;
@@ -19,6 +18,7 @@ export class DefenseMissiles {
   y: number;
   id: number;
   audio: HTMLAudioElement;
+  isFullLocked: boolean;
   constructor(canvas: Canvas, HostileArtifacts: HostileArtifact) {
     this.canvas = canvas;
     this.audio = new Audio();
@@ -30,17 +30,20 @@ export class DefenseMissiles {
     this.velocityY = 1;
     this.missionIsDone = false;
     this.color = "#ddff33";
+    this.isFullLocked = false;
     this.hasAlreadyTakenOffAboveMinimumHeight = false;
-    this.isGoing = true;
 
     this.x = this.canvas.width - this.canvas.width / 4 + Math.random() * 10;
     this.y = 0;
     this.id = new Date().getTime();
   }
 
-  explode() {
+  explode(explodeTarget: boolean) {
+    if (explodeTarget) {
+      this.target.explode();
+    }
+
     this.missionIsDone = true;
-    this.target.explode();
     const timeToAudioInMs = 900;
 
     setTimeout(() => {
@@ -50,8 +53,11 @@ export class DefenseMissiles {
 
   renderDefenseMissile() {
     this.canvas.contextCanvas.beginPath();
-    this.canvas.contextCanvas.fillStyle = this.color;
-    this.canvas.contextCanvas.fillRect(this.x, this.canvas.height - this.y, 2, 2);
+    this.canvas.contextCanvas.fillStyle = this.isFullLocked ? "#22ffff" : this.color;
+
+    let width = this.isFullLocked ? 3 : 2;
+    let height = this.isFullLocked ? 3 : 2;
+    this.canvas.contextCanvas.fillRect(this.x, this.canvas.height - this.y, width, height);
     this.canvas.contextCanvas.closePath();
   }
 
@@ -87,12 +93,24 @@ export class DefenseMissiles {
 
     const deltaX = this.target.x - this.x;
     const deltaY = this.target.y - this.y;
-    const distanceToAttachInHorizontal = 700;
-  
+    const distanceToAttachInHorizontal = 400;
+
     if (deltaX > 0) {
-      this.updateVelocityX(deltaX > distanceToAttachInHorizontal ? defaultSpeed / 20 : defaultSpeed);
+      if (deltaX > distanceToAttachInHorizontal) {
+        this.updateVelocityX(defaultSpeed / 5);
+        this.isFullLocked = false;
+      } else {
+        this.updateVelocityX(defaultSpeed);
+        this.isFullLocked = true;
+      }
     } else if (deltaX < 0) {
-      this.updateVelocityX(deltaX < distanceToAttachInHorizontal ? (defaultSpeed / 20) * -1 : defaultSpeed * -1);
+      if (deltaX < distanceToAttachInHorizontal * -1) {
+        this.updateVelocityX((defaultSpeed / 5) * -1);
+        this.isFullLocked = false;
+      } else {
+        this.updateVelocityX(defaultSpeed * -1);
+        this.isFullLocked = true;
+      }
     }
 
     if (deltaY > 0) {
@@ -119,10 +137,6 @@ export class DefenseMissiles {
       return;
     }
 
-    if (!this.isGoing) {
-      return;
-    }
-
     if (!this.hasAlreadyTakenOffAboveMinimumHeight && this.y > minHeightToFlight) {
       this.hasAlreadyTakenOffAboveMinimumHeight = true;
     }
@@ -132,9 +146,9 @@ export class DefenseMissiles {
 
     const targetX = Math.abs(this.target.x - this.x);
     const targetY = Math.abs(this.target.y - this.y);
-    const itIsCloseToTheArtifact = targetX + targetY <= 10;
-    if (itIsCloseToTheArtifact || !this.target.isGoing || (this.hasAlreadyTakenOffAboveMinimumHeight && this.y < minHeightToFlight)) {
-      this.explode();
+    const explodeTarget = targetX + targetY <= 10;
+    if (explodeTarget || !this.target.isGoing || (this.hasAlreadyTakenOffAboveMinimumHeight && this.y < minHeightToFlight)) {
+      this.explode(explodeTarget);
     }
   }
 }
