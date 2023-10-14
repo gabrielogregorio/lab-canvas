@@ -24,7 +24,6 @@ export class RadarSystem {
 
       if (!artifactAreDetected && hostileArtifact.y > MIN_HEIGHT_IN_PX_TO_DETECT_HOSTILE_ARTIFACTS) {
         this.defenseMissilesByIdHostileArtifacts[hostileArtifact.id] = new DefenseMissiles(this.canvas, hostileArtifact);
-
         this.hostileArtifactsDetected.push(hostileArtifact.id);
       }
     });

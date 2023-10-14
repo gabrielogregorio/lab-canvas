@@ -23,7 +23,7 @@ let windSpeed = 0;
     windSpeed = randomizeWindSpeed(windSpeed);
 
     if (keyboard.keyboardState.space) {
-      hostileArtifacts.push(buildHostileArtifact(canvas));
+      hostileArtifacts.push(buildHostileArtifact(canvas, Math.random() * 350));
     }
 
     hostileArtifacts.forEach((hostileArtifact) => {

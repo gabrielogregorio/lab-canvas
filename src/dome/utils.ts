@@ -9,22 +9,21 @@ export function generateRgbCss() {
 export const randomizeWindSpeed = (windSpeed: number): number => {
   let newWindSpeed = windSpeed + Math.random() * 10;
 
-  if (newWindSpeed > 50) {
-    return 50;
+  if (newWindSpeed > 110) {
+    return 110;
   }
 
-  if (newWindSpeed < -50) {
-    return -50;
+  if (newWindSpeed < -110) {
+    return -110;
   }
 
   return newWindSpeed;
 };
 
-
 const GRAVITY = 9.81;
 const FACTOR_TO_SHOW_INSIDE_CANVAS = 20;
 
-export const calculateEllipseHostileArtifact = (elapsedTime: number, horizontalSpeedInitial: number, verticalSpeedInitial: number, windSpeed: number)  => {
+export const calculateEllipseHostileArtifact = (elapsedTime: number, horizontalSpeedInitial: number, verticalSpeedInitial: number, windSpeed: number) => {
   let horizontalSpeedCorrected = horizontalSpeedInitial + windSpeed;
 
   let x = horizontalSpeedCorrected * elapsedTime;
@@ -34,4 +33,4 @@ export const calculateEllipseHostileArtifact = (elapsedTime: number, horizontalS
     x: Math.floor(x / FACTOR_TO_SHOW_INSIDE_CANVAS),
     y: Math.floor(y / FACTOR_TO_SHOW_INSIDE_CANVAS),
   };
-}
+};
