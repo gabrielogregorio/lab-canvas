@@ -5,7 +5,7 @@
   "transformers": {
     "*.{ts,tsx}": ["@parcel/transformer-typescript-tsc"],
     "*.{wav,mp3}": ["@parcel/transformer-raw"],
-    "*.{jpg,png}": ["@parcel/transformer-image"]
+    "*.{jpg,png,webp}": ["@parcel/transformer-image"]
   },
   "reporters": [
     "...",
