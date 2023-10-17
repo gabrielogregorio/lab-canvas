@@ -1,23 +1,23 @@
 import { Canvas } from "./Canvas";
 import { KeyBoardHandler } from "./KeyBoardHandler";
 import { Obstacle } from "./Obstacle";
-import { Performance } from "./Performanc";
-import { RadarHandler } from "./RadarHandler";
+import { Performance } from "./Performance";
+import { Radar } from "./Radar";
 import { RadarScreen } from "./RadarScreen";
 
 (function () {
-  const baseScreenCanvas = new Canvas();
+  const mainCanvas = new Canvas();
   const keyboard = new KeyBoardHandler();
-  const obstacle = new Obstacle(baseScreenCanvas, keyboard);
-  const radarHandler = new RadarHandler(baseScreenCanvas, obstacle);
-  const radarScreenCanvas = new RadarScreen();
+  const obstacle = new Obstacle(mainCanvas, keyboard);
+  const radar = new Radar(mainCanvas, obstacle);
+  const RadarCanvas = new RadarScreen(radar);
 
   new Performance().render(() => {
-    baseScreenCanvas.ctx.clearRect(baseScreenCanvas.x, baseScreenCanvas.y, baseScreenCanvas.width, baseScreenCanvas.height);
+    mainCanvas.ctx.clearRect(mainCanvas.x, mainCanvas.y, mainCanvas.width, mainCanvas.height);
+
     obstacle.render();
+    radar.render();
 
-    radarHandler.render();
-
-    radarScreenCanvas.render(radarHandler.mapObjects());
+    RadarCanvas.render();
   });
 })();

@@ -8,6 +8,8 @@ export class Obstacle {
   width: number;
   height: number;
   keyboard: KeyBoardHandler;
+  xVelocity: number;
+  yVelocity: number;
 
   constructor(canvas: Canvas, keyboardHandler: KeyBoardHandler) {
     this.keyboard = keyboardHandler;
@@ -16,26 +18,29 @@ export class Obstacle {
     this.y = 200;
     this.width = 10;
     this.height = 10;
+    this.xVelocity = 0;
+    this.yVelocity = 0;
   }
 
   render() {
-    console.log(this.keyboard.keyboardState, this.y);
     if (this.keyboard.keyboardState.top) {
-      this.y -= 1;
+      this.yVelocity -= 0.2;
     }
 
     if (this.keyboard.keyboardState.bottom) {
-      this.y += 1;
+      this.yVelocity += 0.2;
     }
 
     if (this.keyboard.keyboardState.left) {
-      this.x -= 1;
+      this.xVelocity -= 0.2;
     }
 
     if (this.keyboard.keyboardState.right) {
-      this.x += 1;
+      this.xVelocity += 0.2;
     }
 
+    this.x += this.xVelocity;
+    this.y += this.yVelocity;
     if (this.keyboard.keyboardState.KeyQ) {
       this.width -= 5;
       this.height -= 5;

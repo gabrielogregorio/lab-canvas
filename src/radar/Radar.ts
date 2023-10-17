@@ -1,9 +1,10 @@
 import { Canvas } from "./Canvas";
 import { Obstacle } from "./Obstacle";
 import { Pulse } from "./Pulse";
-import { calculatePositionXYTarget, isColliding } from "./utils";
+import { calculateNewFrequency, calculateRadialVelocity, calculateTargetVelocity } from "./dopplerUtils";
+import { calculatePositionXYTarget, isColliding, normalizeToClosestThousand } from "./utils";
 
-const maxNumberToExcedsHex = 100000;
+const maxNumberToExcedsHex = 1000000;
 
 type sendFrequencyMapType = {
   timeStart: number;
@@ -14,7 +15,7 @@ type sendFrequencyMapType = {
   frequencyRecieved?: number;
 };
 
-export class RadarHandler {
+export class Radar {
   pulses: Pulse[] = [];
   angle0360: number;
   canvas: Canvas;
@@ -36,7 +37,7 @@ export class RadarHandler {
     this.width = 20;
     this.height = 20;
     this.frequency = 0;
-    this.frequencyGapToDoppler = 100;
+    this.frequencyGapToDoppler = 1000;
     this.frequencySendList = {};
   }
 
@@ -50,8 +51,9 @@ export class RadarHandler {
           { x: this.xSendPulses, y: this.ySendPulses, width: this.width, height: this.height }
         )
       ) {
-        this.frequencySendList[pulse.publicFrequency] = {
-          ...this.frequencySendList[pulse.publicFrequency],
+        const probablyRealFrequency = normalizeToClosestThousand(pulse.publicFrequency);
+        this.frequencySendList[probablyRealFrequency] = {
+          ...this.frequencySendList[probablyRealFrequency],
           timeRecievid: new Date().getTime(),
           frequencyRecieved: pulse.publicFrequency,
         };
@@ -62,18 +64,21 @@ export class RadarHandler {
   }
 
   mapObjects() {
-    const returnItems: { targetX: number; targetY: number; timeRecieved: number }[] = [];
+    const returnItems: { targetX: number; targetY: number; timeRecieved: number; RadialVelocityTarget: number }[] = [];
     const keys = Object.keys(this.frequencySendList);
+
     keys.forEach((key) => {
       if (this.frequencySendList[key].timeRecievid) {
         const deltaTime = this.frequencySendList[key].timeRecievid - this.frequencySendList[key].timeStart;
         const estimatedDistance = (deltaTime * 200) / 3117;
 
         const data = calculatePositionXYTarget(this.xSendPulses, this.ySendPulses, estimatedDistance, this.frequencySendList[key].angle0360);
-        returnItems.push({ ...data, timeRecieved: this.frequencySendList[key].timeRecievid });
+
+        const RadialVelocityTarget = calculateTargetVelocity(this.frequencySendList[key].frequencyRecieved, Number(key), 12345);
+        returnItems.push({ ...data, timeRecieved: this.frequencySendList[key].timeRecievid, RadialVelocityTarget });
       }
     });
-
+    console.log(returnItems.length);
     return returnItems;
   }
 
@@ -91,6 +96,22 @@ export class RadarHandler {
 
       if (pulse.isInInitialDirection && isColliding({ x: pulse.x, y: pulse.y, width: pulse.sizeWidth, height: pulse.sizeHeight }, this.obstacle)) {
         pulse.returnDirection();
+
+        const radialVelocity = calculateRadialVelocity(
+          { x: this.xSendPulses, y: this.ySendPulses },
+
+          {
+            x: this.obstacle.x,
+            y: this.obstacle.y,
+          },
+          {
+            x: this.obstacle.xVelocity,
+            y: this.obstacle.yVelocity,
+          }
+        );
+
+        Math.sqrt(this.obstacle.xVelocity * this.obstacle.xVelocity + this.obstacle.yVelocity * this.obstacle.yVelocity);
+        pulse.publicFrequency = calculateNewFrequency(radialVelocity, pulse.publicFrequency, 12345);
       }
     });
   }

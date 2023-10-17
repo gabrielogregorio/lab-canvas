@@ -32,3 +32,7 @@ export const calculatePositionXYTarget = (radarOriginX: number, radarOriginY: nu
     targetY,
   };
 };
+
+export function normalizeToClosestThousand(value: number): number {
+  return Math.round(value / 1000) * 1000;
+}
