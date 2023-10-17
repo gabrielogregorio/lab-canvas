@@ -30,7 +30,7 @@ export class Pulse {
 
     this.velocityX = Math.cos(angle) * speed;
     this.velocityY = Math.sin(angle) * speed;
-    this.maxLifeInRender = 200;
+    this.maxLifeInRender = 500;
     this.lifeRender = 0;
     this.sizeWidth = 2;
     this.sizeHeight = 2;

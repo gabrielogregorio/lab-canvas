@@ -1,4 +1,4 @@
-const targetFrames = 30;
+const targetFrames = 60;
 
 export class Performance {
   render(callback: () => void) {

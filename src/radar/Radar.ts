@@ -4,8 +4,8 @@ import { Pulse } from "./Pulse";
 import { calculateNewFrequency, calculateRadialVelocity, calculateTargetVelocity } from "./dopplerUtils";
 import { calculatePositionXYTarget, isColliding, normalizeToClosestThousand } from "./utils";
 
-const maxNumberToExcedsHex = 1000000;
-
+const maxNumberToExcedsHex = 100000;
+const max2Frequencty = 10000000;
 type sendFrequencyMapType = {
   timeStart: number;
   angle0360: number;
@@ -18,6 +18,7 @@ type sendFrequencyMapType = {
 export class Radar {
   pulses: Pulse[] = [];
   angle0360: number;
+  angle0360V2: number;
   canvas: Canvas;
   obstacle: Obstacle;
   xSendPulses: number;
@@ -25,6 +26,7 @@ export class Radar {
   width: number;
   height: number;
   frequency: number;
+  frequency2: number;
   frequencyGapToDoppler: number;
   frequencySendList: { [frequency: number]: sendFrequencyMapType };
 
@@ -32,11 +34,14 @@ export class Radar {
     this.obstacle = obstacle;
     this.canvas = canvas;
     this.angle0360 = 0;
+    this.angle0360V2 = 180;
     this.xSendPulses = 100;
     this.ySendPulses = 300;
     this.width = 20;
     this.height = 20;
     this.frequency = 0;
+    this.frequency2 = maxNumberToExcedsHex;
+
     this.frequencyGapToDoppler = 1000;
     this.frequencySendList = {};
   }
@@ -70,7 +75,7 @@ export class Radar {
     keys.forEach((key) => {
       if (this.frequencySendList[key].timeRecievid) {
         const deltaTime = this.frequencySendList[key].timeRecievid - this.frequencySendList[key].timeStart;
-        const estimatedDistance = (deltaTime * 200) / 3117;
+        const estimatedDistance = (deltaTime * 800) / 2817;
 
         const data = calculatePositionXYTarget(this.xSendPulses, this.ySendPulses, estimatedDistance, this.frequencySendList[key].angle0360);
 
@@ -78,7 +83,6 @@ export class Radar {
         returnItems.push({ ...data, timeRecieved: this.frequencySendList[key].timeRecievid, RadialVelocityTarget });
       }
     });
-    console.log(returnItems.length);
     return returnItems;
   }
 
@@ -118,21 +122,33 @@ export class Radar {
 
   render() {
     this.canvas.ctx.beginPath();
-    this.canvas.ctx.fillStyle = "#4411ff";
+    this.canvas.ctx.fillStyle = "#222222";
     this.canvas.ctx.fillRect(this.xSendPulses, this.ySendPulses, this.width, this.height);
     this.canvas.ctx.closePath();
 
     this.frequency += this.frequencyGapToDoppler;
+    this.frequency2 += this.frequencyGapToDoppler;
+
     if (this.frequency > maxNumberToExcedsHex) {
       this.frequency = 0;
     }
 
-    this.angle0360 += 5;
+    if (this.frequency2 > max2Frequencty) {
+      this.frequency2 = maxNumberToExcedsHex + this.frequencyGapToDoppler;
+    }
+
+    this.angle0360 += 3;
     if (this.angle0360 >= 360) {
       this.angle0360 = 0;
     }
+
+    this.angle0360V2 += 3;
+    if (this.angle0360V2 >= 360) {
+      this.angle0360V2 = 0;
+    }
+
     const angleInRadians = this.angle0360 * (Math.PI / 180);
-    const pulseSpeed = 10;
+    const pulseSpeed = 20;
     this.frequencySendList[this.frequency] = {
       timeStart: new Date().getTime(),
       angle0360: this.angle0360,
@@ -141,8 +157,21 @@ export class Radar {
       timeRecievid: undefined,
       frequencyRecieved: undefined,
     };
-
     this.pulses.push(new Pulse(this.canvas, angleInRadians, pulseSpeed, this.xSendPulses, this.ySendPulses, this.frequency));
+
+    //
+
+    const angleInRadiansV2 = this.angle0360V2 * (Math.PI / 180);
+    const pulseSpeedV2 = 15;
+    this.frequencySendList[this.frequency2] = {
+      timeStart: new Date().getTime(),
+      angle0360: this.angle0360V2,
+      xStart: this.xSendPulses,
+      yStart: this.ySendPulses,
+      timeRecievid: undefined,
+      frequencyRecieved: undefined,
+    };
+    this.pulses.push(new Pulse(this.canvas, angleInRadiansV2, pulseSpeedV2, this.xSendPulses, this.ySendPulses, this.frequency2));
 
     this.renderPulses();
 

@@ -1,10 +1,5 @@
 import { Radar } from "./Radar";
-
-type radarDetectionsType = {
-  targetX: number;
-  targetY: number;
-  timeRecieved: number;
-};
+import { isColliding } from "./utils";
 
 export class RadarScreen {
   element: HTMLCanvasElement;
@@ -36,17 +31,45 @@ export class RadarScreen {
     this.ctx.strokeStyle = "#44de3c";
     this.ctx.stroke();
 
+    let lastDetection: { x: number; y: number } = { x: 0, y: 0 };
+
     detections.forEach((item) => {
-      if (new Date().getTime() - item.timeRecieved <= 3000) {
+      if (new Date().getTime() - item.timeRecieved <= 2000) {
         this.ctx.beginPath();
 
-        this.ctx.fillStyle = "#44de3c";
-        this.ctx.font = "16px Arial";
-        this.ctx.textAlign = "center";
-        this.ctx.fillText(` Radial velocity ${Number(item.RadialVelocityTarget.toFixed(2))}`, item.targetX, item.targetY - 10);
+        if (
+          !isColliding(
+            {
+              x: item.targetX / 5,
+              y: item.targetY / 5,
+              width: 30,
+              height: 30,
+            },
+            {
+              x: lastDetection.x,
+              y: lastDetection.y,
+              width: 30,
+              height: 30,
+            }
+          )
+        ) {
+          this.ctx.fillStyle = "#44de3c";
+          this.ctx.font = "16px Arial";
+          this.ctx.textAlign = "center";
+          this.ctx.fillText(
+            `X=${Math.floor(item.targetX)} Y=${Math.floor(item.targetY)} RV=${Number(item.RadialVelocityTarget.toFixed(2))}`,
+            Math.floor(item.targetX / 5),
+            Math.floor(item.targetY / 5) - 10
+          );
+
+          lastDetection = {
+            x: item.targetX / 5,
+            y: item.targetY / 5,
+          };
+        }
 
         this.ctx.fillStyle = "#44de3c";
-        this.ctx.fillRect(item.targetX, item.targetY, 10, 10);
+        this.ctx.fillRect(item.targetX / 5, item.targetY / 5, 10, 10);
         this.ctx.closePath();
       }
     });
