@@ -14,25 +14,34 @@ export const isColliding = (box1: BoxType, box2: BoxType): boolean => {
   return !(box2NotCollideRight || box1NotColliedRight || box2NotColliedBottom || box1NotColliedBottom);
 };
 
-const degreesToRadians = (degrees: number): number => {
+export const degreesToRadians = (degrees: number): number => {
   return degrees * (Math.PI / 180);
-};
-
-export const calculatePositionXYTarget = (radarOriginX: number, radarOriginY: number, distanceFromRadarHypotenuse: number, angleInDegrees: number) => {
-  let angleInRadians = degreesToRadians(angleInDegrees);
-
-  let adjacentLeg = distanceFromRadarHypotenuse * Math.cos(angleInRadians);
-  let oppositeLeg = distanceFromRadarHypotenuse * Math.sin(angleInRadians);
-
-  let targetX = radarOriginX + adjacentLeg;
-  let targetY = radarOriginY + oppositeLeg;
-
-  return {
-    targetX,
-    targetY,
-  };
 };
 
 export function normalizeToClosestThousand(value: number): number {
   return Math.round(value / 1000) * 1000;
 }
+
+export const loadImageCanvas = (src: string, onLoad: (imageLoaded: HTMLImageElement) => void) => {
+  const image = new Image();
+  image.src = src;
+
+  image.onload = () => {
+    onLoad(image);
+  };
+};
+
+export const renderAndRotateImage = (ctx: CanvasRenderingContext2D, image: HTMLImageElement, degrees: number, x: number, y: number, w: number, h: number) => {
+  ctx.beginPath();
+
+  ctx.save();
+  ctx.translate(x + w / 2, y + h / 2);
+  ctx.rotate((degrees * Math.PI) / 180.0);
+  ctx.translate(-x - w / 2, -y - h / 2);
+
+  ctx.drawImage(image, x, y, w, h);
+
+  ctx.restore();
+
+  ctx.closePath();
+};

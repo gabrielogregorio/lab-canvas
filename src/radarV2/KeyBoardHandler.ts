@@ -1,4 +1,11 @@
-import { keyboardStateType } from "./types";
+export type keyboardStateType = {
+  top: boolean;
+  left: boolean;
+  bottom: boolean;
+  right: boolean;
+  KeyQ: boolean;
+  KeyE: boolean;
+};
 
 export class KeyBoardHandler {
   keyboardState: keyboardStateType;
@@ -9,7 +16,7 @@ export class KeyBoardHandler {
       bottom: false,
       right: false,
       KeyQ: false,
-      KeyE: false
+      KeyE: false,
     };
 
     const moves = {
@@ -32,7 +39,6 @@ export class KeyBoardHandler {
       KeyE: (newValue) => {
         this.keyboardState.KeyE = newValue;
       },
-      
     };
 
     window.addEventListener("keydown", (event) => {

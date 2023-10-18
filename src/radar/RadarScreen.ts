@@ -34,7 +34,7 @@ export class RadarScreen {
     let lastDetection: { x: number; y: number } = { x: 0, y: 0 };
 
     detections.forEach((item) => {
-      if (new Date().getTime() - item.timeRecieved <= 2000) {
+      if (new Date().getTime() - item.timeReceived <= 2000) {
         this.ctx.beginPath();
 
         if (
@@ -57,7 +57,7 @@ export class RadarScreen {
           this.ctx.font = "16px Arial";
           this.ctx.textAlign = "center";
           this.ctx.fillText(
-            `X=${Math.floor(item.targetX)} Y=${Math.floor(item.targetY)} RV=${Number(item.RadialVelocityTarget.toFixed(2))}`,
+            `X=${Math.floor(item.targetX)} Y=${Math.floor(item.targetY)} RV=${Number(item.RadialSpeedTarget.toFixed(2))}`,
             Math.floor(item.targetX / 3),
             Math.floor(item.targetY / 3) - 10
           );
