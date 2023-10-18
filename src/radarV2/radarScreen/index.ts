@@ -2,10 +2,10 @@ import { InteractionHandler } from "../InteractionHandler";
 import { Radar, targetInformationType } from "../radar/index";
 import { isColliding } from "../utils";
 
-const TIME_IN_MS_TO_IGNORE_RECEIVED_DETECTIONS = 4000;
-const MAX_RADAR_SCALE = 4;
-const TIME_IN_MS_TO_IGNORE_KEYBOARD_ACTION = 500;
+const MAX_RADAR_SCALE = 128;
+const TIME_IN_MS_TO_IGNORE_KEYBOARD_ACTION = 200;
 
+const MAX_TIME_TO_IGNORE_DETECTIONS = 12000;
 import audioDetection from "../radar-detected.wav";
 
 export class RadarScreen {
@@ -24,10 +24,11 @@ export class RadarScreen {
   isInPreventMode: boolean;
   audio: HTMLAudioElement;
 
+  timeToReset: number;
   constructor(radar: Radar) {
     this.radar = radar;
 
-    this.scale = 1;
+    this.scale = 4;
 
     this.element = document.getElementById("canvas2") as HTMLCanvasElement;
     this.ctx = this.element.getContext("2d") as CanvasRenderingContext2D;
@@ -36,6 +37,8 @@ export class RadarScreen {
     this.y = 0;
     this.width = 500;
     this.height = 500;
+
+    this.timeToReset = 4000;
 
     this.audio = new Audio();
     this.audio.src = audioDetection;
@@ -98,14 +101,14 @@ export class RadarScreen {
       {
         x: detection.targetPosition.x,
         y: detection.targetPosition.y,
-        width: 50,
-        height: 50,
+        width: 20,
+        height: 20,
       },
       {
         x: lastDetection.x,
         y: lastDetection.y,
-        width: 50,
-        height: 50,
+        width: 20,
+        height: 20,
       }
     );
   }
@@ -145,7 +148,7 @@ export class RadarScreen {
       const targetNormalized = this.normalizeWithOnRadarCenter(detectionToIgnore.targetPosition.x, detectionToIgnore.targetPosition.y);
       const detectionNormalized: targetInformationType = { ...detectionToIgnore, targetPosition: targetNormalized };
 
-      const detectionIsVeryOld = new Date().getTime() - detectionNormalized.timeReceived > TIME_IN_MS_TO_IGNORE_RECEIVED_DETECTIONS;
+      const detectionIsVeryOld = new Date().getTime() - detectionNormalized.timeReceived > this.timeToReset;
       if (detectionIsVeryOld) {
         return;
       }
@@ -166,10 +169,26 @@ export class RadarScreen {
     this.ctx.closePath();
   }
 
+  changeResetTime() {
+    this.timeToReset += 1000;
+    if (this.timeToReset > MAX_TIME_TO_IGNORE_DETECTIONS) {
+      this.timeToReset = 2000;
+    }
+  }
   render() {
     this.ctx.clearRect(0, 0, this.width, this.height);
 
     if (this.interactionHandler.keyboardState.KeyQ && !this.isInPreventMode) {
+      this.isInPreventMode = true;
+
+      this.changeResetTime();
+
+      setTimeout(() => {
+        this.isInPreventMode = false;
+      }, TIME_IN_MS_TO_IGNORE_KEYBOARD_ACTION);
+    }
+
+    if (this.interactionHandler.keyboardState.KeyE && !this.isInPreventMode) {
       this.isInPreventMode = true;
 
       this.changeScale();

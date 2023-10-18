@@ -1,13 +1,13 @@
 import { Canvas } from "../scenario/index";
 import { Obstacle } from "../obstacle/index";
 import { Pulse } from "./Pulse";
-import { degreesToRadians, isColliding, loadImageCanvas, normalizeToClosestThousand, renderAndRotateImage } from "../utils";
+import { degreesToRadians, isColliding, loadImageCanvas, normalizeToClosest300, renderAndRotateImage } from "../utils";
 import radarImageExternal from "./radar.png";
 import { calculateTargetVelocity } from "./math/calculateTargetVelocity";
 
-const MAX_FREQUENCY = 100000;
+const MAX_FREQUENCY = 900000;
 const SPEED_WAVE = 12345;
-const FACTOR_UPDATE_NEW_FREQUENCY = 1000;
+const FACTOR_UPDATE_NEW_FREQUENCY = 300;
 
 type sendFrequencyMapType = {
   timeLaunched: number;
@@ -80,9 +80,10 @@ export class Radar {
         return;
       }
 
-      const realFrequency = normalizeToClosestThousand(pulse.frequency);
+      const realFrequency = normalizeToClosest300(pulse.frequency);
       if (!this.databasePulses[realFrequency]) {
         pulse.destroyPulse();
+        return;
       }
 
       this.databasePulses[realFrequency] = {
@@ -97,6 +98,7 @@ export class Radar {
 
   calculateDistanceByLaunchAndReceivedTime(pulse: sendFrequencyMapType) {
     const deltaTime = pulse.timeReceived - pulse.timeLaunched;
+
     return (deltaTime * 800) / 2817;
   }
 
@@ -123,6 +125,7 @@ export class Radar {
       if (!pulse.timeReceived) {
         return;
       }
+
 
       targets.push(this.calculateTargetInformation(pulse, Number(frequencyLaunched)));
     });

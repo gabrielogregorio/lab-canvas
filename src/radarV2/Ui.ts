@@ -47,6 +47,22 @@ export class Ui {
     const y = height - 50;
 
     this.positions.KeyQ = {
+      x: 10,
+      y,
+      height: 40,
+      width: 40,
+    };
+
+    this.renderButton({
+      text: `${this.radarScreen.timeToReset / 1000}s`,
+      isActive: false,
+      x: 10,
+      y: y,
+      xText: 30,
+      yText: height - 23,
+    });
+
+    this.positions.KeyE = {
       x,
       y,
       height: 40,
@@ -54,7 +70,7 @@ export class Ui {
     };
 
     this.renderButton({
-      text: `${this.radarScreen.scale}X`,
+      text: `${this.radarScreen.scale}x`,
       isActive: false,
       x: x,
       y: y,

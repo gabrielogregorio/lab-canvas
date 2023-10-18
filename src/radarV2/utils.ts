@@ -18,8 +18,8 @@ export const degreesToRadians = (degrees: number): number => {
   return degrees * (Math.PI / 180);
 };
 
-export function normalizeToClosestThousand(value: number): number {
-  return Math.round(value / 1000) * 1000;
+export function normalizeToClosest300(value: number): number {
+  return Math.round(value / 300) * 300;
 }
 
 export const loadImageCanvas = (src: string, onLoad: (imageLoaded: HTMLImageElement) => void) => {

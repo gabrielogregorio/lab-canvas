@@ -114,6 +114,7 @@ export class Pulse {
     });
 
     const newFrequency = calculateNewFrequency(radialVelocity, this.frequency, SPEED_WAVE);
+
     if (newFrequency > this.frequency) {
       this.applyBlueShift(newFrequency);
     }

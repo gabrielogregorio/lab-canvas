@@ -34,6 +34,9 @@ export class Canvas {
   }
 
   drawWarShip() {
+    if (!this.warShip) {
+      return;
+    }
     this.ctx.beginPath();
     this.ctx.drawImage(this.warShip, -2, 248, 120, 120);
     this.ctx.closePath();
