@@ -2,9 +2,11 @@ import { InteractionHandler } from "../InteractionHandler";
 import { Radar, targetInformationType } from "../radar/index";
 import { isColliding } from "../utils";
 
-const TIME_IN_MS_TO_IGNORE_RECEIVED_DETECTIONS = 2000;
+const TIME_IN_MS_TO_IGNORE_RECEIVED_DETECTIONS = 4000;
 const MAX_RADAR_SCALE = 4;
 const TIME_IN_MS_TO_IGNORE_KEYBOARD_ACTION = 500;
+
+import audioDetection from "../radar-detected.wav";
 
 export class RadarScreen {
   x: number;
@@ -20,6 +22,7 @@ export class RadarScreen {
 
   interactionHandler: InteractionHandler;
   isInPreventMode: boolean;
+  audio: HTMLAudioElement;
 
   constructor(radar: Radar) {
     this.radar = radar;
@@ -33,6 +36,10 @@ export class RadarScreen {
     this.y = 0;
     this.width = 500;
     this.height = 500;
+
+    this.audio = new Audio();
+    this.audio.src = audioDetection;
+    this.audio.volume = 0.5;
   }
 
   setInteractionHandler(interactionHandler: InteractionHandler) {
@@ -118,8 +125,10 @@ export class RadarScreen {
     const x = Math.floor(detection.targetPosition.x);
     const y = Math.floor(detection.targetPosition.y);
 
+    const estimatedDistanceFloor = Math.floor(detection.estimatedDistance);
+
     const yNormalized = y > 0 ? y - 10 : y + 10;
-    this.ctx.fillText(`xy(${targetXFloor}, ${targetYFloor}) rv=${radialSpeedTargetFixed}`, x, yNormalized);
+    this.ctx.fillText(`xy(${targetXFloor}, ${targetYFloor}) rv=${radialSpeedTargetFixed} d=${estimatedDistanceFloor}`, x, yNormalized);
   }
 
   drawClusterItem(detection: targetInformationType) {
@@ -148,6 +157,7 @@ export class RadarScreen {
         };
 
         this.drawInformationCluster(detectionNormalized);
+        this.audio.play();
       }
 
       this.drawClusterItem(detectionNormalized);

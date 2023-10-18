@@ -6,7 +6,6 @@ import helicopterR3 from "./helicopter_r3.png";
 import { loadImageCanvas } from "../utils";
 
 const ACCELERATION_FACTOR = 0.2;
-const SIZE_ADJUST_FACTOR = 5;
 
 export class Obstacle {
   canvas: Canvas;
@@ -22,6 +21,8 @@ export class Obstacle {
   image2: HTMLImageElement;
   image3: HTMLImageElement;
 
+  audio: HTMLAudioElement;
+
   currentImage: number;
 
   constructor(canvas: Canvas, keyboardHandler: KeyBoardHandler) {
@@ -35,6 +36,7 @@ export class Obstacle {
     this.xSpeed = 0;
     this.ySpeed = 0;
     this.currentImage = 0;
+
 
     loadImageCanvas(helicopterR1, (imageLoaded) => {
       this.image1 = imageLoaded;
@@ -70,16 +72,6 @@ export class Obstacle {
   updateLocation() {
     this.x += this.xSpeed;
     this.y += this.ySpeed;
-
-    if (this.keyboard.keyboardState.KeyQ) {
-      this.width -= SIZE_ADJUST_FACTOR;
-      this.height -= SIZE_ADJUST_FACTOR;
-    }
-
-    if (this.keyboard.keyboardState.KeyE) {
-      this.width += SIZE_ADJUST_FACTOR;
-      this.height += SIZE_ADJUST_FACTOR;
-    }
   }
 
   private drawObstacleInfo() {

@@ -7,6 +7,7 @@ import { calculateRadialVelocity } from "./math/calculateRadialVelocity";
 
 const MAX_LIFE_RENDER = 600;
 const SPEED_WAVE = 12345;
+const FACTOR_RESIZE_PULSE = 2;
 
 type startPositionLaunch = {
   x: number;
@@ -68,8 +69,6 @@ export class Pulse {
   }
 
   updateScale() {
-    const FACTOR_RESIZE_PULSE = 1;
-
     if (this.isInInitialDirection) {
       this.width += FACTOR_RESIZE_PULSE;
       this.height += FACTOR_RESIZE_PULSE;
