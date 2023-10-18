@@ -25,6 +25,7 @@ export class RadarScreen {
   audio: HTMLAudioElement;
 
   timeToReset: number;
+
   constructor(radar: Radar) {
     this.radar = radar;
 
@@ -140,9 +141,12 @@ export class RadarScreen {
   }
 
   drawDetections(detections: targetInformationType[]) {
-    let lastDetection = { x: 0, y: 0 };
-
     this.ctx.beginPath();
+
+    let lastDetection = {
+      x: 0,
+      y: 0,
+    };
 
     detections.forEach((detectionToIgnore) => {
       const targetNormalized = this.normalizeWithOnRadarCenter(detectionToIgnore.targetPosition.x, detectionToIgnore.targetPosition.y);
@@ -154,13 +158,12 @@ export class RadarScreen {
       }
 
       if (this.isOutsideClusterZone(detectionNormalized, lastDetection)) {
+        this.drawInformationCluster(detectionNormalized);
+        this.audio.play();
         lastDetection = {
           x: detectionNormalized.targetPosition.x,
           y: detectionNormalized.targetPosition.y,
         };
-
-        this.drawInformationCluster(detectionNormalized);
-        this.audio.play();
       }
 
       this.drawClusterItem(detectionNormalized);

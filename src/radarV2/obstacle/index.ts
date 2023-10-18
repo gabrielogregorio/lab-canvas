@@ -6,6 +6,7 @@ import helicopterR3 from "./helicopter_r3.png";
 import { loadImageCanvas } from "../utils";
 
 const ACCELERATION_FACTOR = 0.2;
+import helicopter from "../military-rotor-loop.wav";
 
 export class Obstacle {
   canvas: Canvas;
@@ -36,6 +37,15 @@ export class Obstacle {
     this.xSpeed = 0;
     this.ySpeed = 0;
     this.currentImage = 0;
+
+    this.audio = new Audio();
+    this.audio.src = helicopter;
+    this.audio.volume = 0.5;
+    this.audio.loop = true;
+
+    this.canvas.element.addEventListener("click", () => {
+      this.audio.play();
+    });
 
     loadImageCanvas(helicopterR1, (imageLoaded) => {
       this.image1 = imageLoaded;
