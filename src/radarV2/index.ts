@@ -1,9 +1,11 @@
+import { InteractionHandler } from "./InteractionHandler";
 import { KeyBoardHandler } from "./KeyBoardHandler";
 import { Obstacle } from "./obstacle/index";
 import { Performance } from "./Performance";
 import { Radar } from "./radar/index";
 import { RadarScreen } from "./radarScreen/index";
 import { Canvas } from "./scenario/index";
+import { Ui } from "./Ui";
 
 (function () {
   const mainCanvas = new Canvas();
@@ -11,15 +13,25 @@ import { Canvas } from "./scenario/index";
 
   const obstacle = new Obstacle(mainCanvas, keyboard);
   const radarSystem = new Radar(mainCanvas, obstacle);
-  const RadarDisplay = new RadarScreen(radarSystem);
+
+  const radarDisplay = new RadarScreen(radarSystem);
+
+  const interactionHandler = new InteractionHandler(radarDisplay, keyboard);
+  radarDisplay.setInteractionHandler(interactionHandler);
+  const ui = new Ui(radarDisplay, interactionHandler);
+
+  interactionHandler.setUi(ui);
 
   new Performance().render(() => {
-    mainCanvas.ctx.clearRect(mainCanvas.x, mainCanvas.y, mainCanvas.width, mainCanvas.height);
     mainCanvas.render();
 
     obstacle.render();
 
     radarSystem.render();
-    RadarDisplay.render();
+
+    interactionHandler.render();
+
+    radarDisplay.render();
+    ui.render();
   });
 })();

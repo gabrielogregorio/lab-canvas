@@ -40,6 +40,8 @@ export class Canvas {
   }
 
   render() {
+    this.ctx.clearRect(this.x, this.y, this.width, this.height);
+
     this.drawOcean();
     this.drawWarShip();
   }

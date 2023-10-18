@@ -4,7 +4,6 @@ export type keyboardStateType = {
   bottom: boolean;
   right: boolean;
   KeyQ: boolean;
-  KeyE: boolean;
 };
 
 export class KeyBoardHandler {
@@ -15,8 +14,7 @@ export class KeyBoardHandler {
       left: false,
       bottom: false,
       right: false,
-      KeyQ: false,
-      KeyE: false,
+      KeyQ: false
     };
 
     const moves = {
@@ -36,9 +34,7 @@ export class KeyBoardHandler {
       KeyQ: (newValue) => {
         this.keyboardState.KeyQ = newValue;
       },
-      KeyE: (newValue) => {
-        this.keyboardState.KeyE = newValue;
-      },
+  
     };
 
     window.addEventListener("keydown", (event) => {

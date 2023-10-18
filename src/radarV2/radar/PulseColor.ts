@@ -40,10 +40,10 @@ export class PulseColor {
   }
 
   applyBlueShift(frequencyDiff: number): void {
-    this.b += frequencyDiff / 100;
+    this.b += frequencyDiff / 300;
   }
 
   applyRedShift(frequencyDiff: number): void {
-    this.r += frequencyDiff / 100;
+    this.r += frequencyDiff / 300;
   }
 }

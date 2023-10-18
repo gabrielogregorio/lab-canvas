@@ -1,7 +1,10 @@
+import { InteractionHandler } from "../InteractionHandler";
 import { Radar, targetInformationType } from "../radar/index";
 import { isColliding } from "../utils";
 
 const TIME_IN_MS_TO_IGNORE_RECEIVED_DETECTIONS = 2000;
+const MAX_RADAR_SCALE = 4;
+const TIME_IN_MS_TO_IGNORE_KEYBOARD_ACTION = 500;
 
 export class RadarScreen {
   x: number;
@@ -13,16 +16,34 @@ export class RadarScreen {
   ctx: CanvasRenderingContext2D;
   radar: Radar;
 
+  scale: number;
+
+  interactionHandler: InteractionHandler;
+  isInPreventMode: boolean;
+
   constructor(radar: Radar) {
     this.radar = radar;
 
+    this.scale = 1;
+
     this.element = document.getElementById("canvas2") as HTMLCanvasElement;
     this.ctx = this.element.getContext("2d") as CanvasRenderingContext2D;
-
+    this.isInPreventMode = false;
     this.x = 0;
     this.y = 0;
     this.width = 500;
     this.height = 500;
+  }
+
+  setInteractionHandler(interactionHandler: InteractionHandler) {
+    this.interactionHandler = interactionHandler;
+  }
+
+  changeScale() {
+    this.scale = this.scale * 2;
+    if (this.scale > MAX_RADAR_SCALE) {
+      this.scale = 1;
+    }
   }
 
   drawRadarCircle() {
@@ -40,9 +61,10 @@ export class RadarScreen {
     arcs.forEach((arc) => {
       this.ctx.beginPath();
       this.ctx.strokeStyle = "#44de3c";
+      this.ctx.lineWidth = 1;
       this.ctx.arc(x, y, Math.floor(radius - factorEachArc * arc), startDegree, endDegree);
-      this.ctx.stroke();
       this.ctx.closePath();
+      this.ctx.stroke();
     });
   }
 
@@ -52,15 +74,15 @@ export class RadarScreen {
 
   normalizeWithOnRadarCenter(x: number, y: number): { x: number; y: number } {
     return {
-      x: x + this.width / 2,
-      y: y + this.height / 2,
+      x: x / this.scale + this.width / 2,
+      y: y / this.scale + this.height / 2,
     };
   }
 
   removeNormalizationRadarCenter(x: number, y: number): { x: number; y: number } {
     return {
-      x: x - this.width / 2,
-      y: y - this.height / 2,
+      x: x / this.scale - this.width / 2,
+      y: y / this.scale - this.height / 2,
     };
   }
 
@@ -83,7 +105,7 @@ export class RadarScreen {
 
   drawInformationCluster(detection: targetInformationType) {
     this.ctx.fillStyle = "#44de3c";
-    this.ctx.font = "16px Arial";
+    this.ctx.font = "bold 16px Verdana";
     this.ctx.textAlign = "center";
 
     const sizesUnNormalized = this.removeNormalizationRadarCenter(detection.targetPosition.x, detection.targetPosition.y);
@@ -97,7 +119,7 @@ export class RadarScreen {
     const y = Math.floor(detection.targetPosition.y);
 
     const yNormalized = y > 0 ? y - 10 : y + 10;
-    this.ctx.fillText(`xy=(${targetXFloor}, ${targetYFloor}) radialV=${radialSpeedTargetFixed}`, x, yNormalized);
+    this.ctx.fillText(`xy(${targetXFloor}, ${targetYFloor}) rv=${radialSpeedTargetFixed}`, x, yNormalized);
   }
 
   drawClusterItem(detection: targetInformationType) {
@@ -135,9 +157,20 @@ export class RadarScreen {
   }
 
   render() {
-    this.ctx.clearRect(0, 0, 500, 500);
+    this.ctx.clearRect(0, 0, this.width, this.height);
+
+    if (this.interactionHandler.keyboardState.KeyQ && !this.isInPreventMode) {
+      this.isInPreventMode = true;
+
+      this.changeScale();
+
+      setTimeout(() => {
+        this.isInPreventMode = false;
+      }, TIME_IN_MS_TO_IGNORE_KEYBOARD_ACTION);
+    }
 
     this.drawRadarCircle();
     this.drawDetections(this.getDetections());
+    this.ctx.closePath();
   }
 }
