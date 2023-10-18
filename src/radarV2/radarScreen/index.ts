@@ -50,19 +50,33 @@ export class RadarScreen {
     return this.radar.getDetectTargets();
   }
 
-  isOutsideClusterZone(detection: targetInformationType, lastDetection) {
+  normalizeWithOnRadarCenter(x: number, y: number): { x: number; y: number } {
+    return {
+      x: x + this.width / 2,
+      y: y + this.height / 2,
+    };
+  }
+
+  removeNormalizationRadarCenter(x: number, y: number): { x: number; y: number } {
+    return {
+      x: x - this.width / 2,
+      y: y - this.height / 2,
+    };
+  }
+
+  isOutsideClusterZone(detection: targetInformationType, lastDetection: targetInformationType["targetPosition"]) {
     return !isColliding(
       {
-        x: detection.targetPosition.x / 3,
-        y: detection.targetPosition.y / 3,
-        width: 30,
-        height: 30,
+        x: detection.targetPosition.x,
+        y: detection.targetPosition.y,
+        width: 50,
+        height: 50,
       },
       {
         x: lastDetection.x,
         y: lastDetection.y,
-        width: 30,
-        height: 30,
+        width: 50,
+        height: 50,
       }
     );
   }
@@ -72,19 +86,23 @@ export class RadarScreen {
     this.ctx.font = "16px Arial";
     this.ctx.textAlign = "center";
 
-    const targetXFloor = Math.floor(detection.targetPosition.x);
-    const targetYFloor = Math.floor(detection.targetPosition.y);
+    const sizesUnNormalized = this.removeNormalizationRadarCenter(detection.targetPosition.x, detection.targetPosition.y);
 
-    const radialSpeedTargetFixed = Number(detection.radialSpeed.toFixed(2));
+    const targetXFloor = Math.floor(sizesUnNormalized.x);
+    const targetYFloor = Math.floor(sizesUnNormalized.y);
 
-    const x = Math.floor(detection.targetPosition.x / 3);
-    const y = Math.floor(detection.targetPosition.y / 3) - 10;
-    this.ctx.fillText(`xy=(${targetXFloor}, ${targetYFloor}) radialV=${radialSpeedTargetFixed}`, x, y);
+    const radialSpeedTargetFixed = Number(detection.radialSpeed.toFixed(2)) || 0;
+
+    const x = Math.floor(detection.targetPosition.x);
+    const y = Math.floor(detection.targetPosition.y);
+
+    const yNormalized = y > 0 ? y - 10 : y + 10;
+    this.ctx.fillText(`xy=(${targetXFloor}, ${targetYFloor}) radialV=${radialSpeedTargetFixed}`, x, yNormalized);
   }
 
   drawClusterItem(detection: targetInformationType) {
     this.ctx.fillStyle = "#44de3c";
-    this.ctx.fillRect(detection.targetPosition.x / 3, detection.targetPosition.y / 3, 10, 10);
+    this.ctx.fillRect(detection.targetPosition.x, detection.targetPosition.y, 10, 10);
   }
 
   drawDetections(detections: targetInformationType[]) {
@@ -92,22 +110,25 @@ export class RadarScreen {
 
     this.ctx.beginPath();
 
-    detections.forEach((detection) => {
-      const detectionIsVeryOld = new Date().getTime() - detection.timeReceived > TIME_IN_MS_TO_IGNORE_RECEIVED_DETECTIONS;
+    detections.forEach((detectionToIgnore) => {
+      const targetNormalized = this.normalizeWithOnRadarCenter(detectionToIgnore.targetPosition.x, detectionToIgnore.targetPosition.y);
+      const detectionNormalized: targetInformationType = { ...detectionToIgnore, targetPosition: targetNormalized };
+
+      const detectionIsVeryOld = new Date().getTime() - detectionNormalized.timeReceived > TIME_IN_MS_TO_IGNORE_RECEIVED_DETECTIONS;
       if (detectionIsVeryOld) {
         return;
       }
 
-      if (this.isOutsideClusterZone(detection, lastDetection)) {
-        this.drawInformationCluster(detection);
-
+      if (this.isOutsideClusterZone(detectionNormalized, lastDetection)) {
         lastDetection = {
-          x: detection.targetPosition.x / 3,
-          y: detection.targetPosition.y / 3,
+          x: detectionNormalized.targetPosition.x,
+          y: detectionNormalized.targetPosition.y,
         };
+
+        this.drawInformationCluster(detectionNormalized);
       }
 
-      this.drawClusterItem(detection);
+      this.drawClusterItem(detectionNormalized);
     });
 
     this.ctx.closePath();

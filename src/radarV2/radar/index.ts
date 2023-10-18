@@ -63,8 +63,8 @@ export class Radar {
     let adjacentLeg = distanceFromRadarHypotenuse * Math.cos(angleInRadians);
     let oppositeLeg = distanceFromRadarHypotenuse * Math.sin(angleInRadians);
 
-    let x = radarOriginX + adjacentLeg;
-    let y = radarOriginY + oppositeLeg;
+    let x = adjacentLeg;
+    let y = oppositeLeg;
 
     return {
       x,
