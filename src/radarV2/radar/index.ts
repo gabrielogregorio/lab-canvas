@@ -102,6 +102,7 @@ export class Radar {
 
   calculateTargetInformation(pulse: sendFrequencyMapType, frequencyLaunched: number): targetInformationType {
     const estimatedDistance = this.calculateDistanceByLaunchAndReceivedTime(pulse);
+
     const targetPosition = this.calculatePositionXYTarget(this.x, this.y, estimatedDistance, pulse.degree);
     const radialSpeed = calculateTargetVelocity(pulse.frequencyReceived, frequencyLaunched, SPEED_WAVE);
 

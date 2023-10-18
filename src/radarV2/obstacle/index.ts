@@ -28,15 +28,14 @@ export class Obstacle {
   constructor(canvas: Canvas, keyboardHandler: KeyBoardHandler) {
     this.keyboard = keyboardHandler;
     this.canvas = canvas;
-    this.x = 300;
-    this.y = 400;
+    this.x = 500;
+    this.y = 300;
     this.width = 45;
     this.height = 26;
 
     this.xSpeed = 0;
     this.ySpeed = 0;
     this.currentImage = 0;
-
 
     loadImageCanvas(helicopterR1, (imageLoaded) => {
       this.image1 = imageLoaded;
