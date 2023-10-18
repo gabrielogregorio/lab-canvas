@@ -62,7 +62,7 @@ export class Obstacle {
       this.y - 10
     );
 
-    this.canvas.ctx.fillStyle = "#ff2222";
+    this.canvas.ctx.fillStyle = "#ffff22";
     this.canvas.ctx.fillRect(this.x, this.y, this.width, this.height);
     this.canvas.ctx.closePath();
   }

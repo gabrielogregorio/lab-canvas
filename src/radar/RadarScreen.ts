@@ -40,8 +40,8 @@ export class RadarScreen {
         if (
           !isColliding(
             {
-              x: item.targetX / 5,
-              y: item.targetY / 5,
+              x: item.targetX / 3,
+              y: item.targetY / 3,
               width: 30,
               height: 30,
             },
@@ -58,18 +58,18 @@ export class RadarScreen {
           this.ctx.textAlign = "center";
           this.ctx.fillText(
             `X=${Math.floor(item.targetX)} Y=${Math.floor(item.targetY)} RV=${Number(item.RadialVelocityTarget.toFixed(2))}`,
-            Math.floor(item.targetX / 5),
-            Math.floor(item.targetY / 5) - 10
+            Math.floor(item.targetX / 3),
+            Math.floor(item.targetY / 3) - 10
           );
 
           lastDetection = {
-            x: item.targetX / 5,
-            y: item.targetY / 5,
+            x: item.targetX / 3,
+            y: item.targetY / 3,
           };
         }
 
         this.ctx.fillStyle = "#44de3c";
-        this.ctx.fillRect(item.targetX / 5, item.targetY / 5, 10, 10);
+        this.ctx.fillRect(item.targetX / 3, item.targetY / 3, 10, 10);
         this.ctx.closePath();
       }
     });

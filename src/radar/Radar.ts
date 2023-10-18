@@ -121,10 +121,10 @@ export class Radar {
   }
 
   render() {
-    this.canvas.ctx.beginPath();
-    this.canvas.ctx.fillStyle = "#222222";
-    this.canvas.ctx.fillRect(this.xSendPulses, this.ySendPulses, this.width, this.height);
-    this.canvas.ctx.closePath();
+    // this.canvas.ctx.beginPath();
+    // this.canvas.ctx.fillStyle = "#222222";
+    // this.canvas.ctx.fillRect(this.xSendPulses, this.ySendPulses, this.width, this.height);
+    // this.canvas.ctx.closePath();
 
     this.frequency += this.frequencyGapToDoppler;
     this.frequency2 += this.frequencyGapToDoppler;

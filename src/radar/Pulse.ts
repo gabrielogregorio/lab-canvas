@@ -53,19 +53,19 @@ export class Pulse {
     this.y += this.velocityY;
 
     if (this.isInInitialDirection) {
-      this.sizeWidth += 0.8;
-      this.sizeHeight += 0.8;
+      this.sizeWidth += 1;
+      this.sizeHeight += 1;
     } else {
       if (this.sizeWidth >= 0) {
-        this.sizeWidth -= 0.8;
-        this.sizeHeight -= 0.8;
+        this.sizeWidth -= 1;
+        this.sizeHeight -= 1;
       } else {
         this.deactivate();
       }
     }
 
     this.canvas.ctx.beginPath();
-    this.canvas.ctx.fillStyle = "#2244FF";
+    this.canvas.ctx.fillStyle = "#ffffff";
     this.canvas.ctx.fillRect(this.x, this.y, this.sizeWidth, this.sizeHeight);
     this.canvas.ctx.closePath();
 

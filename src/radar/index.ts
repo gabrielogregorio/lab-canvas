@@ -14,6 +14,7 @@ import { RadarScreen } from "./RadarScreen";
 
   new Performance().render(() => {
     mainCanvas.ctx.clearRect(mainCanvas.x, mainCanvas.y, mainCanvas.width, mainCanvas.height);
+    mainCanvas.render();
 
     obstacle.render();
     radar.render();
