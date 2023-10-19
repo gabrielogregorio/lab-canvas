@@ -64,6 +64,10 @@ export class InteractionHandler {
       if (this.hasCollision("KeyQ")) {
         newKeyBoardState.KeyQ = true;
       }
+
+      if (this.hasCollision("KeyE")) {
+        newKeyBoardState.KeyE = true;
+      }
     }
 
     this.resetClick();
