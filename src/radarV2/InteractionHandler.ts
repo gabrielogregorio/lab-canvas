@@ -55,6 +55,9 @@ export class InteractionHandler {
   }
 
   hasCollision(keyName: keyof keyboardStateType): boolean {
+    if (!this.ui.positions[keyName]) {
+      return;
+    }
     const insideXPosition = this.lastXClick >= this.ui.positions[keyName].x && this.lastXClick <= this.ui.positions[keyName].x + this.ui.positions[keyName].width;
     const insideYPosition = this.lastYClick >= this.ui.positions[keyName].y && this.lastYClick <= this.ui.positions[keyName].y + this.ui.positions[keyName].height;
     return insideXPosition && insideYPosition;
