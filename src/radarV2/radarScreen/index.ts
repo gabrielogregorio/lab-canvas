@@ -92,8 +92,8 @@ export class RadarScreen {
 
   removeNormalizationRadarCenter(x: number, y: number): { x: number; y: number } {
     return {
-      x: x / this.scale - this.width / 2,
-      y: y / this.scale - this.height / 2,
+      x: x - this.width / 2,
+      y: y - this.height / 2,
     };
   }
 
