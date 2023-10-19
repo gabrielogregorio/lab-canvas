@@ -1,16 +1,18 @@
 import { RadarScreen } from "./radarScreen/index";
 import { KeyBoardHandler, keyboardStateType } from "./KeyBoardHandler";
 import { Ui } from "./Ui";
+import { Canvas } from "./scenario/index";
+import { UiCanvas } from "./UiMainCanvas";
 
 export class InteractionHandler {
-  canvas: RadarScreen;
+  canvas: RadarScreen | Canvas;
   keyboardState: keyboardStateType;
   keyBoardHandler: KeyBoardHandler;
-  ui: Ui;
+  ui: Ui | UiCanvas;
   lastXClick: number;
   lastYClick: number;
 
-  constructor(canvas: RadarScreen, keyBoardHandler: KeyBoardHandler) {
+  constructor(canvas: RadarScreen | Canvas, keyBoardHandler: KeyBoardHandler) {
     this.canvas = canvas;
     this.keyBoardHandler = keyBoardHandler;
     this.keyboardState = keyBoardHandler.keyboardState;
@@ -32,7 +34,7 @@ export class InteractionHandler {
     console.log(`Mouse down at x: ${this.lastXClick}, y: ${this.lastYClick}`);
   }
 
-  setUi(ui: Ui) {
+  setUi(ui: Ui | UiCanvas) {
     this.ui = ui;
   }
 
@@ -67,6 +69,22 @@ export class InteractionHandler {
 
       if (this.hasCollision("KeyE")) {
         newKeyBoardState.KeyE = true;
+      }
+
+      if (this.hasCollision("top")) {
+        newKeyBoardState.top = true;
+      }
+
+      if (this.hasCollision("left")) {
+        newKeyBoardState.left = true;
+      }
+
+      if (this.hasCollision("right")) {
+        newKeyBoardState.right = true;
+      }
+
+      if (this.hasCollision("bottom")) {
+        newKeyBoardState.bottom = true;
       }
     }
 

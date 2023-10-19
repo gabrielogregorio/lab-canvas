@@ -7,6 +7,7 @@ import { loadImageCanvas } from "../utils";
 
 const ACCELERATION_FACTOR = 0.2;
 import helicopter from "../military-rotor-loop.wav";
+import { InteractionHandler } from "../InteractionHandler";
 
 export class Obstacle {
   canvas: Canvas;
@@ -14,7 +15,7 @@ export class Obstacle {
   y: number;
   width: number;
   height: number;
-  keyboard: KeyBoardHandler;
+  keyboard: InteractionHandler;
   xSpeed: number;
   ySpeed: number;
 
@@ -26,7 +27,7 @@ export class Obstacle {
 
   currentImage: number;
 
-  constructor(canvas: Canvas, keyboardHandler: KeyBoardHandler) {
+  constructor(canvas: Canvas, keyboardHandler: InteractionHandler) {
     this.keyboard = keyboardHandler;
     this.canvas = canvas;
     this.x = 500;
